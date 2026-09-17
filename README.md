@@ -503,6 +503,13 @@ TrapTracker-Automatic-Reporting-Extension/
   only.** Winter times are decoded but flagged as unvalidated.
 - **Non-animal classes are untested on real data.** No person, vehicle or calibration
   pole appeared in the evaluation period.
+- **The photo descriptions are not fully reliable.** The vision model (`llava`)
+  usually describes the animal and scene plausibly, but it invents text that is not in
+  the photo (dates, temperatures, camera labels, URLs) and occasionally animals or
+  species that are not there. Telling it to ignore on-image text did not help, so this
+  is a limit of the model rather than of the prompt. Reports mark the descriptions as
+  unverified and count nothing from them; see the
+  [write-up](docs/evaluation/vlm_confabulation_findings.md).
 
 **Software**
 
