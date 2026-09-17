@@ -316,6 +316,17 @@ def _no_credential_env(monkeypatch):
             monkeypatch.delenv(key, raising=False)
 
 
+@pytest.fixture(autouse=True)
+def _no_example_project(monkeypatch):
+    """`ttr serve` builds the example project into the projects root on first
+    start. The serve tests run with no TTR_PROJECTS_ROOT, which is the user's real
+    data directory, so the step is off unless a test turns it back on
+    (`test_example_project.py`)."""
+    from ttr.projects.example import SKIP_ENV_VAR
+
+    monkeypatch.setenv(SKIP_ENV_VAR, "1")
+
+
 #: The repository's own data directory. Nothing in the suite may open a database
 #: in here.
 _REPO_DATA_DIR = Path(__file__).resolve().parents[1] / "data"

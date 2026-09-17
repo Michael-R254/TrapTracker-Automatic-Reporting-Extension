@@ -225,22 +225,20 @@ docker compose -f docker/compose.yaml up -d
 Then open `http://127.0.0.1:8000/?token=<your token>`. Set the same value in each new
 terminal before running `up` again.
 
-### 3. Load the example data
+### 3. Explore the example project
 
-To explore the UI without a mailbox, load the published example (475 alerts from one
-garden camera):
+The first time the container starts, it builds an **Example Site** project from the
+published data (475 alerts from one garden camera), so the UI has something to show
+without a mailbox. Open **Example Site** and choose the **All records** window to
+cover the whole dataset.
+
+The example is only built into an empty projects volume, and only once: delete it and
+it stays deleted. To skip it, set `TTR_NO_EXAMPLE=1` in the container's environment.
+To build it again later:
 
 ```bash
-docker compose -f docker/compose.yaml run --rm ttr project import-extract \
-    --csv docs/evaluation/data/detections_20260628-0716.csv \
-    --name "Example Site" \
-    --alias-table examples/back-garden/species_aliases.yaml \
-    --site-name "Example Village, UK" \
-    --latitude 51.5 --longitude -0.1
+docker compose -f docker/compose.yaml run --rm ttr project load-example
 ```
-
-Refresh the projects page and open **Example Site**. Choose the **All records** window
-to cover the whole dataset.
 
 ### 4. Written summaries (optional)
 
@@ -329,25 +327,24 @@ passwords never go in `.env`: they are kept in your operating system's credentia
 ### Try the example (no mailbox or models needed)
 
 ```bash
-# 1. Choose where projects are stored (must be an absolute path).
-export TTR_PROJECTS_ROOT="$PWD/.ttr-example"          # macOS/Linux
-# $env:TTR_PROJECTS_ROOT = "$PWD\.ttr-example"        # Windows PowerShell
-
-# 2. Build a project from the published data (takes about a second).
-ttr project import-extract \
-    --csv docs/evaluation/data/detections_20260628-0716.csv \
-    --name "Example Site" \
-    --alias-table examples/back-garden/species_aliases.yaml \
-    --site-name "Example Village, UK" \
-    --latitude 51.5 --longitude -0.1
-
-# 3a. Browse it: open the URL this prints.
-ttr serve
-
-# 3b. Or write a report. --window counts back from today, so it must reach
-#     back to 2026-06-28 to include the data.
-ttr report --all-species --window 120d --out .ttr-example/all-species.md
+ttr serve    # then open the URL it prints
 ```
+
+The first time `ttr serve` starts with no projects, it builds an **Example Site**
+project from the published data (475 alert events, about a second) and opens on it.
+It only does this for an empty projects folder, and only once: delete the example and
+it stays deleted. Set `TTR_NO_EXAMPLE=1` to skip it, or run `ttr project load-example`
+to build it yourself, for example to use it from the command line straight away:
+
+```bash
+ttr project load-example
+# --window counts back from today, so it must reach back to 2026-06-28.
+ttr report --all-species --window 120d --out all-species.md
+```
+
+Projects are stored in `%LOCALAPPDATA%\TrapTrackerReport` on Windows and
+`~/.local/share/traptracker-report` elsewhere. Set `TTR_PROJECTS_ROOT` to an absolute
+path to keep them somewhere else.
 
 More detail: [`examples/back-garden/README.md`](examples/back-garden/README.md).
 
@@ -374,6 +371,7 @@ the inbox.
 | `ttr report --all-species --window 30d` | Summary across all species |
 | `ttr report --bng-aligned --window 90d --out r.md` | BNG-aligned habitat-condition evidence |
 | `ttr project list` | List projects and show which is active |
+| `ttr project load-example` | Build the example project from the bundled published data |
 | `ttr backfill-weather --dry-run` | Show which stored alerts would gain weather data |
 | `ttr backfill-capture-time --dry-run` | Show which stored alerts would be re-dated |
 

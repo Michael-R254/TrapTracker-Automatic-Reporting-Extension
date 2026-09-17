@@ -56,8 +56,9 @@ RUN case ",$EXTRAS," in \
     && pip install $index ".[$EXTRAS]" \
     && rm -rf build
 
-# The worked example (examples/back-garden/README.md): the published, image-free
-# extract, so a container can show real reports with no mailbox at all.
+# The worked example's sources (examples/back-garden/README.md). `serve` builds
+# the example project from the copy bundled in the package on first start; these
+# keep `ttr project import-extract --csv docs/...` working inside the container.
 COPY examples ./examples
 COPY docs/evaluation/data ./docs/evaluation/data
 

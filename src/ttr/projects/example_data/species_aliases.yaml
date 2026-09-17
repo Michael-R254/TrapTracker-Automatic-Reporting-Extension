@@ -1,0 +1,34 @@
+# Species alias table for the published evaluation extract (Decision 5).
+#
+# AUTHORED FOR THIS EXAMPLE, NOT COPIED FROM A DEPLOYMENT. It covers exactly the
+# four classes that occur in `docs/evaluation/data/detections_20260628-0716.csv`
+# and nothing else. Each binomial and each common name was written from a public
+# taxonomy (the accepted binomial and the standard English vernacular name); no
+# part of it derives from the TrapTracker RT class list, whose redistribution
+# terms are unconfirmed.
+#
+# WHAT IT DELIBERATELY DOES NOT COVER. Four classes is not a camera's class list.
+# The bundled illustrative table at `src/ttr/species/data/species_aliases.example.yaml`
+# is wider and exercises structural cases this file does not — many-to-one tokens,
+# life-stage variants, and the reserved `nonbio:` keys for Person / Car /
+# CalibrationPole. None of those three ever appeared in the extract, so the
+# `nonbio:` path is untested against this data and no entry here pretends
+# otherwise. Point `SPECIES_ALIAS_PATH` at your own model's classes for real use.
+#
+# The four below account for all 475 rows: 458 / 8 / 7 / 2.
+
+Columba palumbus:
+  raw_tokens: [ColumbaPalumbus]
+  common_names: [wood pigeon, woodpigeon, common wood pigeon]
+
+Corvus corone:
+  raw_tokens: [CorvusCorone]
+  common_names: [carrion crow, crow]
+
+Sciurus carolinensis:
+  raw_tokens: [SciurusCarolinensis]
+  common_names: [grey squirrel, gray squirrel, eastern grey squirrel]
+
+Felis catus:
+  raw_tokens: [FelisCatus]
+  common_names: [domestic cat, cat, house cat]

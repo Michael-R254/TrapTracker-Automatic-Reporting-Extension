@@ -390,6 +390,11 @@ def _accounted_names(manifest: ProjectManifest) -> set[str]:
     # Derived from db_path, so it is ours whenever the database is.
     if not manifest.storage.database_external:
         names.add("seen_message_ids.txt")
+    # The project's own alias table and the snapshots taken of it
+    # (`ProjectContext`), so a project with its own table can be deleted without
+    # --force.
+    names.update({ProjectContext.DEFAULT_ALIAS_FILENAME,
+                  ProjectContext.ALIAS_SNAPSHOT_DIR})
     return names
 
 

@@ -74,6 +74,9 @@ x-ttr: &ttr
     # the same reason never given a value here or in docker/.env. Unset, a fresh
     # token is minted each start and printed in `logs ttr`.
     TTR_UI_TOKEN:
+    # Set to 1 to stop the first `serve` building the example project into an
+    # empty volume (`projects/example.py`).
+    TTR_NO_EXAMPLE:
 
 services:
   ttr:

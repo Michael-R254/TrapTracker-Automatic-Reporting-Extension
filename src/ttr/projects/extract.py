@@ -135,3 +135,47 @@ def load_into(ctx, rows: list[dict], *, ingested_at: Optional[dt.datetime] = Non
         repo.close()
     logger.info("extract_loaded", extra={"rows": stored})
     return stored
+
+
+def create_from_extract(csv_path: Path, name: str, *,
+                        alias_table: Optional[Path] = None,
+                        site_name: Optional[str] = None,
+                        latitude: Optional[float] = None,
+                        longitude: Optional[float] = None,
+                        root: Optional[Path] = None):
+    """Create a mailbox-less project and load an extract into it.
+
+    Returns ``(manifest, project_dir, ctx, stored)``. Everything that can be
+    checked is checked before the project exists, and a failure after that
+    removes the half-built project, so a refusal leaves nothing to delete by hand.
+    """
+    from .paths import projects_root
+    from .registry import Registry
+    from .service import context_for, create_project, delete_project, set_site
+
+    rows = read_extract(Path(csv_path))
+    if (latitude is None) != (longitude is None):
+        raise ProjectError("give both --latitude and --longitude, or neither -- a "
+                           "half-set coordinate pair is not a location")
+    if alias_table is not None and not Path(alias_table).is_file():
+        raise ProjectError(f"no such alias table: {alias_table}")
+
+    root = root or projects_root()
+    manifest, project_dir = create_project(name, root=root)
+    try:
+        # The alias table belongs in the project BEFORE the rows are resolved
+        # against it, so the stored `alias_table_sha256` names the table actually
+        # in force rather than the bundled fallback.
+        if alias_table is not None:
+            import shutil
+
+            shutil.copy2(alias_table, project_dir / "species_aliases.yaml")
+        if site_name or latitude is not None:
+            set_site(manifest.id, name=site_name or None,
+                     latitude=latitude, longitude=longitude, root=root)
+        ctx = context_for(Registry.load(root).get(manifest.id), root)
+        stored = load_into(ctx, rows)
+    except BaseException:
+        delete_project(manifest.id, root=root, force=True)
+        raise
+    return manifest, project_dir, ctx, stored

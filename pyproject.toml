@@ -121,8 +121,11 @@ where = ["src"]
 #     Missing from this list until 2026-09-15: an editable install reads it
 #     from the source tree, so dev and CI never noticed, but a regular install
 #     (the Docker image) crashed on the first `import-extract` or `create`.
+#   projects/example_data — the published extract and its alias table, which
+#     `ttr serve` loads as the example project on a fresh install.
 [tool.setuptools.package-data]
-ttr = ["agentdefs/definitions/*.md", "species/data/*.yaml", "storage/schema.sql"]
+ttr = ["agentdefs/definitions/*.md", "species/data/*.yaml", "storage/schema.sql",
+       "projects/example_data/*.csv", "projects/example_data/*.yaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

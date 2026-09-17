@@ -7,7 +7,14 @@ extract described in [its own README](../../docs/evaluation/data/README.md).
 
 ## Run it
 
-From the repository root, with the package installed (`pip install -e ".[web]"`):
+**Usually you do not need to.** With the package installed, the first `ttr serve`
+against an empty projects folder builds this project by itself, from copies of the
+extract and alias table bundled with the package (`src/ttr/projects/example_data/`).
+It happens once: delete the project and it is not rebuilt. `ttr project load-example`
+builds it again on request, and `TTR_NO_EXAMPLE=1` skips the automatic step.
+
+To build it by hand instead, from the repository root with the package installed
+(`pip install -e ".[web]"`):
 
 ```bash
 # 1. Choose where projects live. Must be an ABSOLUTE path.

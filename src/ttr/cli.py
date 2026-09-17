@@ -816,6 +816,7 @@ def serve(
     import logging
     import os
 
+    from .projects.example import ensure_example_project
     from .web.app import app as web_app
     from .web.auth import (
         UI_TOKEN_ENV,
@@ -846,6 +847,9 @@ def serve(
     # write it to the log in clear, outliving the session it belongs to.
     for name in ("uvicorn.access", "uvicorn.error"):
         logging.getLogger(name).addFilter(RedactTokenFilter())
+
+    # A fresh install opens on the worked example rather than an empty page.
+    ensure_example_project(notify=lambda message: typer.echo(message, err=True))
 
     if not is_loopback(host):
         typer.echo(

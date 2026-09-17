@@ -786,47 +786,19 @@ def import_extract_cmd(
     produce a project that disagreed with the evidence file it came from.
     """
     from pathlib import Path
-    import shutil
 
     from .projects.errors import ProjectError
-    from .projects.extract import load_into, read_extract
-    from .projects.service import context_for, create_project, set_site
-    from .projects.registry import Registry
+    from .projects.extract import create_from_extract
 
-    root = _root()
     source = Path(csv_path)
     try:
-        rows = read_extract(source)
+        manifest, project_dir, ctx, stored = create_from_extract(
+            source, name,
+            alias_table=Path(alias_table) if alias_table else None,
+            site_name=site_name, latitude=latitude, longitude=longitude,
+            root=_root())
     except ProjectError as exc:
-        _fail(str(exc))
-
-    if (latitude is None) != (longitude is None):
-        _fail("give both --latitude and --longitude, or neither -- a half-set "
-              "coordinate pair is not a location")
-
-    try:
-        manifest, project_dir = create_project(name, root=root)
-    except ProjectError as exc:
-        _fail(str(exc))
-
-    # The alias table belongs in the project BEFORE the rows are resolved
-    # against it, so the stored `alias_table_sha256` names the table actually
-    # in force rather than the bundled fallback.
-    if alias_table:
-        table = Path(alias_table)
-        if not table.is_file():
-            _fail(f"no such alias table: {table}")
-        shutil.copy2(table, project_dir / "species_aliases.yaml")
-
-    if site_name or latitude is not None:
-        try:
-            set_site(manifest.id, name=site_name or None,
-                     latitude=latitude, longitude=longitude, root=root)
-        except ProjectError as exc:
-            _fail(f"the project was created but the site was not set: {exc}")
-
-    ctx = context_for(Registry.load(root).get(manifest.id), root)
-    stored = load_into(ctx, rows)
+        _fail(f"error: {exc}")
 
     typer.echo(f"Created {manifest.name!r} from {source.name}")
     typer.echo(f"  {stored} rows loaded  -  alias table: {ctx.alias_table_source()}")
@@ -834,4 +806,26 @@ def import_extract_cmd(
     typer.echo("")
     typer.echo("  No mailbox is configured, so this project can report but not "
                "ingest.")
+    typer.echo(f"  Open it with:  ttr serve   (then pick {manifest.name!r})")
+
+
+@app.command(name="load-example")
+def load_example_cmd() -> None:
+    """Build the worked example project from the data bundled with the package.
+
+    `ttr serve` does this by itself the first time it starts against an empty
+    projects root. This builds it again on request, for instance after deleting
+    it, or alongside projects that already exist.
+    """
+    from .projects.errors import ProjectError
+    from .projects.example import build_example_project
+
+    try:
+        manifest, project_dir, ctx, stored = build_example_project(_root())
+    except ProjectError as exc:
+        _fail(f"error: {exc}")
+
+    typer.echo(f"Created {manifest.name!r} from the published example data")
+    typer.echo(f"  {stored} rows loaded  -  alias table: {ctx.alias_table_source()}")
+    typer.echo(f"  {project_dir}")
     typer.echo(f"  Open it with:  ttr serve   (then pick {manifest.name!r})")
