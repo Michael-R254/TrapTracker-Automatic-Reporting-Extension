@@ -12,7 +12,7 @@ a licensing audit: MegaDetector's code is MIT and MIT/Apache weight variants
 exist, but every shipped inference path installs an AGPL-3.0 dependency
 (``megadetector`` requires ``ultralytics-yolov5``; ``PytorchWildlife`` requires
 ``ultralytics`` and ``yolov5``), and this project serves a web UI — the one
-configuration AGPL §13 is written to reach. See ``LICENSING_REVIEW.md`` §4.
+configuration AGPL §13 is written to reach.
 
 Phase 2a benchmarked it against the 835 Phase-1-verified rectangles: 97.0% recall
 at IoU 0.5, median matched IoU 0.887, and no degradation on small boxes — the

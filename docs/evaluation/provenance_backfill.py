@@ -9,9 +9,9 @@ alias-table case, where back-filling `alias_table_sha256` onto old rows was refu
 because nobody knows which table resolved them and writing one would invent an
 attribution. Here the values were fetched from the mailbox that still holds the
 source messages, and every one was checked against the receiving MX's own
-`Authentication-Results` (`docs/corpus-inventory.md` §5.1: 787 of 787, single
-sender, identical verdicts). Recording them restores a fact the repository used to
-discard on every write; it does not claim one.
+`Authentication-Results` (787 of 787, single sender, identical verdicts). Recording
+them restores a fact the repository used to discard on every write; it does not claim
+one.
 
 The capture is NOT re-fetched and NOT re-verified here. If the file is missing,
 this script stops rather than going to the network: re-fetching would be a new

@@ -198,7 +198,7 @@ def test_progress_callback_reports_a_failed_event(repo, alias_map, tmp_path):
 # The source used to mark a Message-ID seen the moment it yielded the event, so a
 # failure anywhere downstream — a full image store, a locked database — left the
 # message marked and it never came round again. That is a silent drop, which
-# "degrade gracefully, never drop" (CLAUDE.md 4) forbids. These pin the contract.
+# "degrade gracefully, never drop" forbids. These pin the contract.
 # --------------------------------------------------------------------------- #
 class ExplodingRepo:
     """A repository whose writes fail, standing in for a full disk / locked DB."""

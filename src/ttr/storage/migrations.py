@@ -251,7 +251,7 @@ _ADDED_COLUMNS = (
     # Sender provenance, recorded at write time and never judged here. The
     # parser already built these and the repository threw them away, which is why
     # the 787-event corpus could not be attributed from the database alone and
-    # had to be audited against the mailbox instead (corpus-inventory.md §5).
+    # had to be audited against the mailbox instead.
     # `source_auth_results_json` is EVERY Authentication-Results header verbatim,
     # as a JSON array: NULL means the header was ABSENT (a message that never left
     # the provider carries none), which a pass/fail column could not distinguish

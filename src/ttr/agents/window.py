@@ -29,7 +29,7 @@ _UNIT = {"h": "hours", "d": "days", "w": "weeks"}
 #: Timezone whose calendar days the report counts by. Must match the camera's
 #: wall clock (``sources.capture_time.CAMERA_TIMEZONE``) — capture times are
 #: decoded from that clock, so days are only meaningful in it. Kept as a separate
-#: constant because agents may not import from ``sources/`` (CLAUDE.md §5).
+#: constant because agents may not import from ``sources/``.
 REPORT_TIMEZONE = "Europe/London"
 
 

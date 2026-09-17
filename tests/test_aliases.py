@@ -95,7 +95,7 @@ def test_entries_on_bundled_table_covers_all_classes_incl_nonbio():
 #
 # It exercises every structural case the code branches on. It is deliberately not
 # a copy of any deployment's class list: that list's redistribution terms are
-# unconfirmed (LICENSING_REVIEW.md), so it stays local and is covered by the
+# unconfirmed, so it stays local and is covered by the
 # deployment-conformance tests further down, which skip when it is absent.
 # --------------------------------------------------------------------------- #
 def test_bundled_table_nonbinomial_handling():
@@ -133,7 +133,7 @@ def test_bundled_table_exercises_every_structural_case():
 
 
 def test_bundled_table_is_not_a_copy_of_a_deployment_class_list():
-    """Provenance guard (LICENSING_REVIEW.md §2). The shipped table may overlap a
+    """Provenance guard. The shipped table may overlap a
     deployment's classes only where a bundled fixture or a reserved-key branch
     actually needs the token — never as a wholesale reproduction of one."""
     amap = SpeciesAliasMap.from_yaml(EXAMPLE_YAML)
@@ -171,8 +171,7 @@ LOCAL_TABLE = Path(__file__).resolve().parents[1] / "config" / "species_aliases.
 
 requires_deployment_table = pytest.mark.skipif(
     not (CLASS_LIST.exists() and LOCAL_TABLE.exists()),
-    reason="deployment class list / local alias table not present (not redistributed "
-           "— see LICENSING_REVIEW.md)",
+    reason="deployment class list / local alias table not present (not redistributed)",
 )
 
 

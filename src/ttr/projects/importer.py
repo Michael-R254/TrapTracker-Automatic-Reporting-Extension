@@ -1,6 +1,6 @@
 """Adopt an existing single-deployment corpus as a project.
 
-The shape of the problem, measured rather than assumed (``docs/corpus-inventory.md``):
+The shape of the problem, measured rather than assumed:
 
   * the database is unstamped and holds 787 events;
   * its stored image paths are RELATIVE, CWD-anchored, backslash-separated, and

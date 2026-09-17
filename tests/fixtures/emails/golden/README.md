@@ -13,7 +13,7 @@ message-state tokens, and two full-resolution photographs of a private garden.
 
 ## What Decision 7 claims, and what still supports it
 
-The claim in `CLAUDE.md` is that the **nominal** alert format was validated
+The claim is that the **nominal** alert format was validated
 field-for-field against a real captured alert email on **2026-07-16**. That
 validation was performed against the **unredacted original**, which is retained
 privately and is not part of this repository.

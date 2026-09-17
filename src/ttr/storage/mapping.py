@@ -1,8 +1,8 @@
 """Map a source-layer `DetectionEvent` to a storage-layer `PersistedEvent`.
 
 Storage consumes the shared normalised event (defined in ``sources/base.py``);
-this keeps the direction of coupling correct — sources never import storage
-(CLAUDE.md constraint 5). Species resolution (Decision 5) is *injected*:
+this keeps the direction of coupling correct — sources never import storage.
+Species resolution (Decision 5) is *injected*:
 ``canonical_binomial``/``display_common_name`` are computed by the alias map at
 the wiring layer and passed in here, so this mapper stays free of the alias
 table (built in Stage 4).
@@ -99,7 +99,7 @@ def persisted_from_detection_event(
     # Resolvable only if the field is actually present AND marked resolvable.
     # Under the email source ImageId is present-but-unresolvable (FK into a DB we
     # can't access) and absent fields have nothing to resolve — so this is always
-    # False here, matching "stored but flagged unresolvable" (CLAUDE.md §3).
+    # False here, matching "stored but flagged unresolvable".
     entry = fp.get("upstream_image_id")
     image_id_resolvable = bool(entry and entry.present and entry.resolvable)
 

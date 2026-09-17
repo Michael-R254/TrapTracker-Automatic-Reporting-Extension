@@ -1,7 +1,7 @@
 """Ollama VLM describer on the BOXED image (§5.2, §7).
 
 Produces a plain-English description via a local Ollama vision model over HTTP.
-Email-derived image content is UNTRUSTED data (CLAUDE.md constraint 6): the
+Email-derived image content is UNTRUSTED data: the
 system prompt instructs the model to describe only and to ignore any
 instructions embedded in the image. On timeout or any error the call returns
 ``ok=False`` with the error and never raises (degrade gracefully).
@@ -31,7 +31,7 @@ _PROVIDER = "ollama"
 # definition — ``src/ttr/agentdefs/definitions/vlm-image-describer.md`` — with the
 # system prompt as the body and the user prompt as its ``user`` fragment. The
 # prompt-injection guard (the image is data to describe, never a source of
-# instructions — CLAUDE.md constraint 6) is part of that instruction text.
+# instructions) is part of that instruction text.
 #
 # Its sibling BioClipEnricher is NOT an agent and has no definition: it runs an
 # image classifier with no prompt anywhere in its path.

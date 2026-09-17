@@ -444,7 +444,7 @@ INGEST_PAGE = """<!doctype html>
 
 </div>
 <script>
-// Every value rendered below is EMAIL-DERIVED and untrusted (CLAUDE.md §6): labels,
+// Every value rendered below is EMAIL-DERIVED and untrusted: labels,
 // message ids, parse warnings and the formatted log lines all quote text an alert
 // email controls. The report page's defence is server-side sanitising; this page's
 // defence is that it never treats the payload as markup at all. textContent only —

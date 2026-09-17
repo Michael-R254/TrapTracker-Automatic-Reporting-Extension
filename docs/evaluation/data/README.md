@@ -15,7 +15,7 @@ place: read the next section before publishing or citing it.
   ingested 2026-07-16 through the production pipeline (parse → BioCLIP + Ollama VLM
   → store). 475 alert detections; 0 unmapped, 0 undated, 0 enrichment failures.
 - **Re-exported 2026-09-03** after the cross-check moved to a two-state,
-  species-level verdict (commit `422b5ac`; see `../../DECISIONS.md` Decision 2).
+  species-level verdict (commit `422b5ac`, Decision 2).
   **Nothing was re-measured.** The same 475 events, the same BioCLIP predictions and
   the same VLM text — re-exported so the `agreement_flag` column reports the current
   model and the audit columns are present. The re-export asserts, event for event,

@@ -24,7 +24,7 @@ and local times that are ambiguous or non-existent across a DST transition, are
 **unvalidated** — they are still decoded, but flagged so a report can say so
 rather than present them as settled.
 
-Degradation (CLAUDE.md constraint 4): a filename that does not carry a usable D
+Degradation: a filename that does not carry a usable D
 block never drops the detection and never fabricates a time — the caller's
 send-time is used instead and the substitution is recorded in the provenance.
 """

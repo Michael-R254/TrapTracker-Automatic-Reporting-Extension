@@ -324,8 +324,8 @@ class DetectionRepository:
         `alias_table_sha256` is deliberately left NULL on old rows because nobody
         knows which table resolved them; writing one would invent an attribution.
         These values were fetched from the mailbox that still holds the source
-        messages and checked against the receiving MX's own verdict
-        (`corpus-inventory.md` §5). Recording them restores a fact that the
+        messages and checked against the receiving MX's own verdict.
+        Recording them restores a fact that the
         repository previously discarded; it does not claim one.
 
         Writes ONLY the four source_* columns. No verdict column is touched, so

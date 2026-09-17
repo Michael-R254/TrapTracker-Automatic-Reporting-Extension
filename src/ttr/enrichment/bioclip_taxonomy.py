@@ -8,7 +8,7 @@ produced — not an inference from the binomial.
 
 **Nothing here is vendored.** The table is fetched through the same
 ``hf_hub_download`` call ``pybioclip`` itself makes, into the user's own Hugging Face
-cache, and this repository redistributes no copy of it (LICENSING_REVIEW.md §4). It
+cache, and this repository redistributes no copy of it. It
 is therefore an OPTIONAL import: only ``recompute-crosscheck --backfill-lineage``
 needs it, the live pipeline never does (its lineages come straight off each
 prediction), and the test suite never does. Heavy imports are deferred to call time

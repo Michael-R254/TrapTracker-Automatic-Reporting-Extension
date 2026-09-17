@@ -19,7 +19,7 @@ this module writes its OWN phase lines — otherwise the button looks broken.
 ``get_repo`` dependency cannot be handed to a background thread. The job thread
 builds its own bundle and closes it in a ``finally``.
 
-**Everything here is email-derived and untrusted (CLAUDE.md §6).** Labels,
+**Everything here is email-derived and untrusted.** Labels,
 message-ids, parse warnings and the formatted log lines all quote attacker-
 controllable text. The report page defends with server-side ``nh3``; this page
 defends by never treating the payload as markup at all — it is JSON, rendered

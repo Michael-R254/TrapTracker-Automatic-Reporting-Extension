@@ -10,8 +10,8 @@
 # hand and cross-checked against the ranks BioCLIP itself reports, so that the two
 # sides of a comparison are ranked on the same backbone. This file is NOT a copy or
 # derivative of the TreeOfLife-10M label table: it is 26 rows of public-domain
-# taxonomic fact, which keeps LICENSING_REVIEW.md §4 true ("this repository
-# redistributes no weights and vendors no model code"). The PREDICTION's ranks are
+# taxonomic fact, which keeps true that this repository redistributes no
+# weights and vendors no model code. The PREDICTION's ranks are
 # never looked up here — they come from BioCLIP's own output (see
 # `bioclip_enricher._to_topk`), which is why no full taxonomy is vendored.
 #

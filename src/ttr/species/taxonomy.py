@@ -14,7 +14,7 @@ Two lineages are needed to measure a distance:
   - the UPSTREAM target's, from the hand-entered ``data/target_taxonomy.yaml``;
   - the PREDICTION's, which comes from BioCLIP's own output and is stored per event
     (``bioclip_top1_*`` columns). It is never looked up in a vendored copy of
-    BioCLIP's label table — that table is not redistributed (LICENSING_REVIEW.md §4),
+    BioCLIP's label table — that table is not redistributed,
     and taking the ranks straight from the prediction is exact rather than inferred.
 """
 

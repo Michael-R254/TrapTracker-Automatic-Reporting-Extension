@@ -7,12 +7,12 @@ evidence for the dissertation's evaluation and future-work chapters._
 > **REVISED 2026-09-03 (commit `422b5ac`).** This evaluation was written against the
 > three-state cross-check (`agree` / `disagree` / `indeterminate`). That model has been
 > retired in favour of a two-state, species-level verdict, with each disagreement carrying a
-> measured taxonomic distance — see `docs/DECISIONS.md` Decision 2 for the superseded text
-> and the evidence. **The measurements below are unchanged**: the same BioCLIP predictions on
-> the same frames, re-expressed under the current model. Every outcome that previously read
-> `indeterminate` here reads `disagree` now, because BioCLIP named a taxon and it was not the
-> upstream species. The paragraphs that *argued from* the three-state model rather than
-> reporting a measurement have been rewritten, and are marked where that happened.
+> measured taxonomic distance (Decision 2). **The measurements below are unchanged**:
+> the same BioCLIP predictions on the same frames, re-expressed under the current
+> model. Every outcome that previously read `indeterminate` here reads `disagree` now,
+> because BioCLIP named a taxon and it was not the upstream species. The paragraphs
+> that *argued from* the three-state model rather than reporting a measurement have
+> been rewritten, and are marked where that happened.
 
 ## Provenance of the evidence
 
@@ -25,10 +25,10 @@ evidence for the dissertation's evaluation and future-work chapters._
 > [`data/detections_20260628-0716.csv`](data/detections_20260628-0716.csv), which
 > is published in full.
 
-- **Original frame:** `docs/evidence/garden_woodpigeon_20260628_original.jpg`
+- **Original frame:** `garden_woodpigeon_20260628_original.jpg`, not published
   (Reolink garden camera, 28/06/2026 18:38, colour daylight; 896×512).
-- **Boxed frame:** `docs/evidence/garden_woodpigeon_20260628_boxed.jpg` — the
-  upstream detector's own annotated output.
+- **Boxed frame:** `garden_woodpigeon_20260628_boxed.jpg`, not published — the
+  upstream detector's own annotated output. Both frames show a private garden.
 
 The camera is a garden bird-feeder cam ("=GardenCatBird="). The subject is a
 **common wood pigeon** at a feeder. The `_boxed` frame shows the upstream
@@ -49,12 +49,12 @@ Two claims the parser was built against (from a **reconstructed** spec, Decision
 7) are corroborated by this real artifact:
 
 1. **`_boxed` attachment naming.** The analysis gave `..._boxed.jpg` only as an
-   illustrative "e.g." (`DETECTION_SYSTEM_ANALYSIS.md §4a:98`); the real boxed
+   illustrative "e.g."; the real boxed
    file is named exactly `..._boxed.jpg`. Our parser keys image role on that
    marker and flags the inference (`sources/email_parser.py`).
 2. **`Rule` / `Best confidence` pairing.** The drawn label `ColumbaPalumbus 0.97`
    matches the reconstructed body fields `Rule: ColumbaPalumbus` /
-   `Best confidence: 0.97` (`§4a:105-111`), including 2-dp rounding.
+   `Best confidence: 0.97`, including 2-dp rounding.
 
 These are not a substitute for the Decision-7 golden-email validation gate (a
 captured `.eml`), but they are positive signal that the reconstruction is close.
@@ -271,7 +271,7 @@ every unmappable BioCLIP label with its event id) is what made that audit possib
 
 ```bash
 # Full frame (as the pipeline runs it):
-ttr enrich --image docs/evidence/garden_woodpigeon_20260628_original.jpg --label ColumbaPalumbus
+ttr enrich --image garden_woodpigeon_20260628_original.jpg --label ColumbaPalumbus
 ```
 (The crop result was produced by cropping the original to the subject region and
 re-running `BioClipEnricher.classify`; the pipeline itself never crops.)

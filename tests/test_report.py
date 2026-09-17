@@ -1402,7 +1402,7 @@ def test_model_text_shaped_like_a_chart_never_reaches_a_chart_or_a_figure(repo, 
 # print/PDF path and the markdown file with one defence instead of three that
 # can disagree. This does NOT narrow the allowlist: whether chart-shaped markup
 # can render at all is a separate, still-open question (test_web.py's strict
-# xfail, Results/coverage_map.md §7.3).
+# xfail).
 # --------------------------------------------------------------------------- #
 _HOSTILE_VLM = ('A fox at the feeder. '
                 '<svg role="img" width="400"><rect fill="#b00020" width="400"></rect>'

@@ -31,7 +31,7 @@ def test_golden_parses_all_fields():
     assert ev.upstream_image_id == 2808
     assert ev.upstream_event_time_utc == datetime(2026, 7, 16, 12, 15, 34, tzinfo=timezone.utc)
     # Nominal both-attachments alert with the '_boxed' marker present: the role
-    # convention is an evidence-backed assumption (DECISIONS.md), so it is NOT
+    # convention is an evidence-backed assumption, so it is NOT
     # flagged per event — a clean parse has zero warnings.
     assert ev.parse_warnings == []
 

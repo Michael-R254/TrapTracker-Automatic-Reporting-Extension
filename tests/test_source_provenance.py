@@ -1,11 +1,11 @@
 """Stage 1: sender provenance is RECORDED at write time, and judged nowhere.
 
 The corpus's provenance could not be established from the database alone because
-the parser built `raw_source_metadata` and the repository discarded it
-(`docs/corpus-inventory.md` §5). These tests pin the four columns that close that
-gap, and — more importantly — pin the one distinction the storage layer must never
-lose: a message carrying NO `Authentication-Results` header is not the same as one
-carrying a failing verdict. A boolean or a pass/fail enum would collapse them.
+the parser built `raw_source_metadata` and the repository discarded it. These tests
+pin the four columns that close that gap, and — more importantly — pin the one
+distinction the storage layer must never lose: a message carrying NO
+`Authentication-Results` header is not the same as one carrying a failing verdict. A
+boolean or a pass/fail enum would collapse them.
 
 Nothing here asserts that a verdict is acted on. This stage records; enforcement is
 a later stage with decisions attached to it.
@@ -134,7 +134,7 @@ def test_an_absent_authentication_results_header_stores_as_NULL(repo):
     """A message that never left the provider carries no such header at all.
 
     Observed on the real mailbox: the self-sent test message among the five
-    non-alerts (`corpus-inventory.md` §5.1) had no `Authentication-Results`,
+    non-alerts had no `Authentication-Results`,
     hop shape ``1:ESMTPSA``.
     """
     _store(repo, _alert("absent@mx.google.com", auth_results=None))

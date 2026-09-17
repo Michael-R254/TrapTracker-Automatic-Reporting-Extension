@@ -33,10 +33,9 @@ dependencies = [
     # Mailbox app passwords go in the OS credential store (Windows Credential
     # Manager / macOS Keychain / Secret Service), never in a file. This is a CORE
     # dependency, not an extra, because the alternative to having it is storing
-    # the secret in plaintext -- which is precisely what the upstream system does
-    # (DETECTION_SYSTEM_ANALYSIS.md section 1) and what this project set out not
-    # to reproduce. An optional dependency would imply a fallback exists; there
-    # is none, by design.
+    # the secret in plaintext -- which is precisely what the upstream system does,
+    # by its own README, and what this project set out not to reproduce. An optional
+    # dependency would imply a fallback exists; there is none, by design.
     "keyring>=24",
     # zoneinfo ships in the stdlib but carries NO tz database on Windows, where it
     # falls back to this package. Capture-time decoding converts Europe/London ->
@@ -57,7 +56,7 @@ dependencies = [
 
 # Heavy ML stack lives behind an extra so the core scaffold (Stages 0-2, 4-5)
 # installs cleanly even where torch/BioCLIP wheels are not yet published for the
-# interpreter in use (see IMPLEMENTATION_PLAN.md §7). Installed at Stage 3.
+# interpreter in use. Installed at Stage 3.
 [project.optional-dependencies]
 enrich = [
     "pillow>=10.0",

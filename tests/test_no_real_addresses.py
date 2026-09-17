@@ -72,8 +72,8 @@ _TEXT_SUFFIXES = {".py", ".md", ".txt", ".toml", ".yaml", ".yml", ".sql",
 _FILE_EXT = re.compile(r"\.(png|jpe?g|gif|svg|pdf|webp|ico|md|py|html?)$", re.I)
 
 #: Local parts that belong to a service rather than a person. `no-reply@` is the
-#: canonical one, and `docs/corpus-inventory.md` quotes Google's because the
-#: corpus it inventories was delivered from it.
+#: canonical one, and Google's appears because the evaluated corpus was
+#: delivered from it.
 _SERVICE_LOCAL = re.compile(r"^(no-?reply|postmaster|mailer-daemon|abuse)$", re.I)
 
 

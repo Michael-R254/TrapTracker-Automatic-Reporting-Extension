@@ -6,10 +6,10 @@ UTC capture time to the nearest hourly record. Responses are cached per-date in
 our own store so repeated backfills never re-hit the API — the data is historical
 and will not change.
 
-Layering (CLAUDE.md constraint 5): this is enrichment. It performs HTTP and
+Layering: this is enrichment. It performs HTTP and
 matching only; it does not know about agents, and its cache is injected (a thin
 duck-typed store owned by the storage layer), so it never imports the repository.
-Degradation (constraint 4): a missing capture time falls back to send time with
+Degradation: a missing capture time falls back to send time with
 that fact recorded; an API gap for a date yields an ``unavailable`` category with
 the reason recorded — never a dropped detection and never an interpolated guess.
 """

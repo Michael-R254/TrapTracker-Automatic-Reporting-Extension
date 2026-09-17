@@ -7,7 +7,7 @@ than vanishing behind a NULL join key, and are flagged non-binomial so nothing
 downstream asserts species-hood.
 
 Design points forced by a real 31-class detector list. That list came from the
-TrapTracker RT deployment and is NOT redistributed (see ``LICENSING_REVIEW.md``);
+TrapTracker RT deployment and is NOT redistributed (its terms are unconfirmed);
 the shipped ``species/data/species_aliases.example.yaml`` is an illustrative
 table that exercises the same shapes:
   - Many tokens per key: life-stage (``NumeniusArquata``/``…Chick``) and sex

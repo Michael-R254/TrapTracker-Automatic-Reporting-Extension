@@ -59,7 +59,7 @@ class Settings(BaseSettings):
     # --- Crop path: independent detector + spatial match (Phase 2c) ---
     # RT-DETR is Apache-2.0 and runs through transformers (Apache-2.0). MegaDetector
     # is deliberately not wired: every shipped inference path for it installs an
-    # AGPL-3.0 dependency and this project serves a web UI (LICENSING_REVIEW.md §4).
+    # AGPL-3.0 dependency and this project serves a web UI.
     detector_model: str = Field(
         "PekingU/rtdetr_r50vd_coco_o365",
         description="Independent detector checkpoint. Runs on the CLEAN frame and "

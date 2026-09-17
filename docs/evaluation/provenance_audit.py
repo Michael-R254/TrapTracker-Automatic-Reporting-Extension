@@ -15,7 +15,7 @@ stage can back-fill provenance from the capture instead of re-fetching.
 WHERE THE OUTPUT GOES. The capture is written to the PROJECT directory, beside
 the corpus it describes, and NOT into this repository. It carries the sender's
 address, every Message-ID in the folder and the full delivery metadata; anything
-committed to `main` stays reachable from every clone (`docs/PUBLICATION.md` §1),
+committed to `main` stays reachable from every clone,
 so this file must not enter it. A later back-fill runs against the project
 database and finds the capture next to it.
 

@@ -10,9 +10,8 @@ carry — "there is no creation form here, and there never will be" — was writ
 when ``ttr serve`` bound loopback with no authentication at all. POSTing a mailbox
 app password to an endpoint any local process could reach was the objection, and
 it was a good one. The session token (``auth.py``) removed it: the endpoint is no
-longer open to anything else on the machine. The exclusion was conditional, the
-condition has been met, and the record of both is in
-``docs/multi-project-phase1b-gap-closure.md`` §6.
+longer open to anything else on the machine. The exclusion was conditional, and the
+condition has been met.
 
 What the token did **not** change is stated on the page itself rather than only
 here: plain HTTP protects nothing in transit, and a password typed into a browser
@@ -1399,8 +1398,7 @@ def _cli_panel_html() -> str:
         '</section>')
 #: The creation panel. Present only because `ttr serve` is now behind a session
 #: token - before that, this POSTed a mailbox app password to an endpoint any
-#: local process could reach. See `docs/multi-project-phase1b-gap-closure.md` §6
-#: for the exclusion and the condition that lifted it.
+#: local process could reach.
 #:
 #: The password field is `type="password"` and the request is a POST with a JSON
 #: BODY. That is not cosmetic: uvicorn's access log records the full request line

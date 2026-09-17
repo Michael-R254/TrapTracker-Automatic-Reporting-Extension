@@ -4,8 +4,8 @@ Open-Meteo reports each hour's conditions as a single WMO code (0–99). This mo
 folds those into the three review-agreed buckets — ``sunny`` / ``cloudy`` /
 ``rainy`` — via one explicit table, so the categorization is auditable rather than
 buried in inline magic numbers. It is a **candidate locked decision**: once the
-table below is agreed it should be appended to ``docs/DECISIONS.md`` (Decision 8),
-and any later change appended there rather than edited in place.
+table below is agreed it should be recorded as Decision 8, and any later change
+recorded as an amendment rather than edited in place.
 
 Design commitments (consistent with the rest of ``ttr``):
 - **Never fabricate.** A code not in the WMO table maps to ``"unknown"`` with the

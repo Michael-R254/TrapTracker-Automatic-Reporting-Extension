@@ -41,7 +41,7 @@ def client(tmp_path, monkeypatch):
         "<f1@x>", canonical_binomial="Vulpes vulpes", event_time=now - timedelta(days=1),
         display_common_name="red fox", bioclip_ok=True, vlm_ok=True, agreement_flag="agree",
         vlm_description="A red fox at the feeder."))
-    # An HTML-shaped VLM description — the untrusted-input case (CLAUDE.md §6).
+    # An HTML-shaped VLM description — the untrusted-input case.
     # Carries BOTH shapes deliberately: <script>, which the sanitiser strips, and
     # chart-shaped markup, which it permits — so the row exercises the sanitiser
     # and the upstream escaping at once.
@@ -255,7 +255,7 @@ def test_bad_date_range_returns_400(client):
 # proves independently.
 #
 # Surfaced by this project's own negative testing while diagnosing the GAP-3
-# chart test. Deliberately DISCLOSED, not fixed — see Results/coverage_map.md §7.
+# chart test. Deliberately DISCLOSED, not fixed.
 # Strict, so it flips to a visible pass the day the render path is hardened.
 # --------------------------------------------------------------------------- #
 def test_narrative_model_markup_renders_inert_not_as_a_live_element(client, tmp_path):

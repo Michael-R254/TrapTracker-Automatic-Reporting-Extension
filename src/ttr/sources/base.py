@@ -78,7 +78,7 @@ class DetectionSource(ABC):
         moment it yields one — the consumer can still fail on it (a full disk
         writing the image store, a locked database), and an event retired before
         it was stored is an event silently lost, which "degrade gracefully, never
-        drop" (CLAUDE.md 4) forbids. Retiring it only on the consumer's
+        drop" forbids. Retiring it only on the consumer's
         acknowledgement means the worst case is a re-delivery, and re-delivery is
         already free: ``detection_events.source_message_id`` is UNIQUE and the
         insert is ``ON CONFLICT DO NOTHING``, so the database is itself a correct

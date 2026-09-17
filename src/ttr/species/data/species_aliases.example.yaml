@@ -8,7 +8,7 @@
 #
 # Redistribution note: the alias table used for this project's own evaluation was
 # built from a class list supplied by the TrapTracker RT deployment, whose
-# redistribution terms are not yet confirmed (see LICENSING_REVIEW.md). That
+# redistribution terms are not yet confirmed. That
 # table therefore stays local and untracked, at the path SPECIES_ALIAS_PATH
 # points to (config/species_aliases.yaml by default). Point that setting at your
 # own model's classes; this file is only the fallback when it is absent.

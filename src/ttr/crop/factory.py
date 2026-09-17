@@ -2,8 +2,8 @@
 
 Only the shipped provider is wired. MegaDetector is deliberately NOT offered:
 every shipped inference path for it installs an AGPL-3.0 dependency, and this
-project serves a web UI. Adding it later is a config-and-factory change, and a
-LICENSING_REVIEW.md §4 entry, not a redesign.
+project serves a web UI. Adding it later is a config-and-factory change and a
+licensing decision, not a redesign.
 """
 
 from __future__ import annotations

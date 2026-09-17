@@ -3,14 +3,14 @@
 Run: ``python tests/fixtures/_generate_fixtures.py``
 
 These ``.eml`` files are built against the reconstructed TrapTracker RT alert
-format (DETECTION_SYSTEM_ANALYSIS.md §4a) — they are NOT captured real emails.
+format — they are NOT captured real emails.
 
 HONESTY CAVEAT (do not present the passing suite as format confirmation): these
-fixtures were produced from the *same reading* of §4a that produced the parser.
-A shared misreading of the real email format — e.g. a different field label, a
-different attachment-naming convention, or header quirks a real MTA introduces —
-would be baked identically into both sides and the tests would still pass. The
-suite therefore proves the parser is internally consistent with our
+fixtures were produced from the *same reading* of the reconstructed format that
+produced the parser. A shared misreading of the real email format — e.g. a different
+field label, a different attachment-naming convention, or header quirks a real MTA
+introduces — would be baked identically into both sides and the tests would still
+pass. The suite therefore proves the parser is internally consistent with our
 reconstruction; it CANNOT prove the reconstruction matches reality.
 
 DECISION-7 GATE CLOSED (2026-07-16): that gap is now closed. A real captured
@@ -46,7 +46,7 @@ _ATTACH = "attachment"
 
 
 def _alert_body(project: str, rule: str, conf: str, image_id: str, time_utc: str) -> str:
-    # Verbatim template order from §4a:105-111.
+    # Verbatim template order from the reconstructed format.
     return (
         f"Project: {project}\n"
         f"Rule: {rule}\n"
@@ -108,7 +108,7 @@ def main() -> None:
         EMAILS / "both_attachments.eml",
     )
 
-    # Missing boxed: annotate step produced nothing → only original attached (§4a:100).
+    # Missing boxed: annotate step produced nothing → only original attached.
     _write(
         _build(
             subject="TrapTrackerRT Alert: CapreolusCapreolus (0.63) — Garden Detections",
@@ -119,7 +119,7 @@ def main() -> None:
         EMAILS / "missing_boxed.eml",
     )
 
-    # Zero attachments: failed attachment read swallowed upstream (§4a:101).
+    # Zero attachments: failed attachment read swallowed upstream.
     _write(
         _build(
             subject="TrapTrackerRT Alert: ErinaceusEuropaeus (0.55) — Garden Detections",
@@ -146,7 +146,7 @@ def main() -> None:
         EMAILS / "malformed_body.eml",
     )
 
-    # Test email: send_test_email path — must be IGNORED (§4a:157).
+    # Test email: send_test_email path — must be IGNORED.
     _write(
         _build(
             subject="TrapTrackerRT — test email",

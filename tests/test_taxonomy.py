@@ -24,7 +24,7 @@ from ttr.species.taxonomy import (DISTANCE_LABELS, DISTANCES, Lineage,
 # passed only when pytest happened to be invoked from the repository root.
 #
 # And the table is gitignored (it describes the operator's model, not this
-# project — see LICENSING_REVIEW.md §2), so on a fresh clone those tests did not
+# project), so on a fresh clone those tests did not
 # skip: they raised FileNotFoundError. A missing non-redistributable file is an
 # expected state, not a failure, so it is guarded the same way
 # `tests/test_aliases.py` already guards it.
@@ -32,7 +32,7 @@ _ALIAS_PATH = Path(__file__).resolve().parents[1] / "config" / "species_aliases.
 
 requires_deployment_table = pytest.mark.skipif(
     not _ALIAS_PATH.exists(),
-    reason="local alias table not present (not redistributed — see LICENSING_REVIEW.md)",
+    reason="local alias table not present (not redistributed)",
 )
 
 

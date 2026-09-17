@@ -1,7 +1,7 @@
 """Pure alert-email parser: ``EmailMessage -> DetectionEvent`` (plan §5.1).
 
 No I/O. Fully unit-testable on saved ``.eml`` fixtures. Built against the
-reconstructed TrapTracker RT alert format (``DETECTION_SYSTEM_ANALYSIS.md §4a``).
+reconstructed TrapTracker RT alert format.
 Its NOMINAL shape was validated against a real captured alert email on 2026-07-16
 (Decision 7 — matched field-for-field); edge-case variants (zero/missing
 attachments, malformed body, test emails) remain validated against the
@@ -10,7 +10,7 @@ note recording that scope.
 
 The parser NEVER fabricates: a field the email did not carry becomes ``None``
 with an ``absent`` provenance entry and a parse warning — never an inferred
-value (CLAUDE.md constraint 3).
+value.
 """
 
 from __future__ import annotations
@@ -29,11 +29,11 @@ from .base import (
     RawImage,
 )
 
-# Subject markers (DETECTION_SYSTEM_ANALYSIS.md §4a:95, §4a:157).
+# Subject markers.
 ALERT_SUBJECT_PREFIX = "TrapTrackerRT Alert:"
 TEST_EMAIL_SUBJECT = "TrapTrackerRT — test email"
 
-# Body is plain text, five line-prefixed fields (§4a:105-111). Prefixes are the
+# Body is plain text, five line-prefixed fields. Prefixes are the
 # stable contract; values are parsed leniently so a partial body still yields
 # what it can. Maps body prefix -> DetectionEvent field name.
 _BODY_FIELDS: tuple[tuple[str, str], ...] = (
@@ -143,7 +143,7 @@ def _reject_if_not_alert(subject: Optional[str]) -> None:
 def _scan_body_lines(body: str) -> dict[str, str]:
     """Return {field_name: raw_value_string} for whatever prefixed lines exist.
 
-    Line-prefix parsing only (no structured markup upstream — §4a:96). A field
+    Line-prefix parsing only (no structured markup upstream). A field
     absent from the body simply does not appear in the returned dict.
     """
     found: dict[str, str] = {}
@@ -216,7 +216,7 @@ def _take_event_time(values, provenance, warnings) -> Optional[datetime]:
     if raw is not None:
         try:
             naive = datetime.strptime(raw, _TIME_FORMAT)
-            value = naive.replace(tzinfo=timezone.utc)  # body time is UTC (§4a:110)
+            value = naive.replace(tzinfo=timezone.utc)  # body time is UTC
             provenance["upstream_event_time_utc"] = FieldProvenance(
                 present=True, source="email_body", limitation=_TIME_LIMITATION
             )
@@ -231,7 +231,7 @@ def _take_event_time(values, provenance, warnings) -> Optional[datetime]:
 # Body / header extraction helpers
 # --------------------------------------------------------------------------- #
 def _extract_plaintext_body(msg: EmailMessage | Message) -> Optional[str]:
-    """Return the text/plain body (§4a:96 — plain text only, no HTML part)."""
+    """Return the text/plain body (plain text only, no HTML part)."""
     if msg.is_multipart():
         for part in msg.walk():
             if part.get_content_type() == "text/plain" and not _is_attachment(part):
@@ -263,8 +263,8 @@ def _extract_images(msg: EmailMessage | Message, warnings: list[str]) -> list[Ra
 
     Role is assigned from the ``_boxed`` filename marker: ``boxed`` if present,
     else ``original``. This convention is a **documented, evidence-backed
-    assumption** (see DECISIONS.md — confirmed on 475 real messages plus the
-    ``docs/evidence`` pair; §4a:98 gave it only as an illustrative "e.g."), so it
+    assumption** (confirmed on 475 real messages plus a captured original/boxed
+    pair; the reconstructed format gave it only as an illustrative "e.g."), so it
     is NOT flagged per event when the marker resolves cleanly. A per-event warning
     is emitted ONLY where the inference genuinely does not resolve — 2+ attachments
     with no ``_boxed`` marker (annotated vs original indistinguishable). The
@@ -344,7 +344,7 @@ def received_shape(msg: EmailMessage | Message) -> Optional[str]:
     """Hop count plus each hop's transport token, e.g. ``3:SMTP,SMTPS,ESMTPSA``.
 
     A cheap anomaly signal: the shape was identical across all 787 events of the
-    2026-09-09 provenance audit (`docs/corpus-inventory.md` §5.1), so a message
+    2026-09-09 provenance audit, so a message
     whose delivery path differs is visible without storing the chain itself —
     which carries hostnames and originating IPs this project has no reason to
     keep. Deliberately coarse, and never used to accept or reject anything.

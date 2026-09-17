@@ -4,7 +4,7 @@
 documented escape hatch. There is no file-based fallback, ever.**
 
 The upstream system's own README records that it stores email app passwords in
-plaintext in SQLite (``DETECTION_SYSTEM_ANALYSIS.md`` section 1). Not reproducing that is
+plaintext in SQLite. Not reproducing that is
 a deliberate improvement, and a "just this once" plaintext fallback would undo it
 - so the failure path here reports that no backend is available and stops, rather
 than quietly writing the secret somewhere it can be read.

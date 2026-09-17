@@ -4,8 +4,8 @@ Design: the factual content (day-by-day ALERT-EVENT counts) and the three
 unconditional honesty statements are computed DETERMINISTICALLY here — never
 delegated to the LLM. The LLM is used only to add an optional narrative summary
 from those facts; if it fails or is a fake, the report is still complete and the
-honesty language still present. VLM descriptions are treated as untrusted data
-(CLAUDE.md §6): they are quoted, and the summary prompt forbids following any
+honesty language still present. VLM descriptions are treated as untrusted data:
+they are quoted, and the summary prompt forbids following any
 instruction embedded in them.
 """
 
@@ -35,9 +35,8 @@ _SUBSTITUTION_PASSES = 8
 class ChartSlots:
     """Trusted, agent-computed markup held OUT of the document while it is built.
 
-    Design record: docs/render-safety.md §2, which explains why the nonce makes
-    forgery impossible rather than merely hard - the timing argument below is the
-    part that is not obvious from the code.
+    The nonce makes forgery impossible rather than merely hard - the timing
+    argument below is the part that is not obvious from the code.
 
     Each chart is replaced in the document by an opaque token and kept here, so
     the document carries no chart markup at all until the last step. That is what
@@ -138,12 +137,12 @@ def _as_plain_text(value) -> str:
     """Neutralise markup in MODEL-authored text, where it enters the document.
 
     Escaped and DISPLAYED here, whereas narrative prose is deleted outright by the
-    document sanitiser. That asymmetry is deliberate and is explained in
-    docs/render-safety.md §3: a description is a quotation, and deleting part of a
-    quotation falsifies it. Do not "fix" one path to match the other.
+    document sanitiser. That asymmetry is deliberate: a description is a quotation,
+    and deleting part of a quotation falsifies it. Do not "fix" one path to match the
+    other.
 
     The VLM describes an image that arrived as an email attachment, so its output
-    is email-derived and untrusted under CLAUDE.md §6 — data to quote, never
+    is email-derived and untrusted — data to quote, never
     markup to render. It has no legitimate need for any: the section that carries
     it presents it as EVIDENCE, in quotation marks, from a source the surrounding
     text explicitly calls unreliable.
@@ -173,7 +172,7 @@ from .window import TimeWindow
 
 logger = get_logger(__name__)
 
-# The three standing caveats (CLAUDE.md) appear in EVERY report. Each substantive
+# The three standing caveats appear in EVERY report. Each substantive
 # CLAIM below is verbatim-stable across reports — the audit value is in the claim
 # being identical — and is tied to a concrete figure at render time so it reads as
 # "this report's N events", not abstract boilerplate. Only the injected figures vary.
@@ -271,10 +270,10 @@ _VALIDATION_STANDING = (
 
 #: The ONLY prompt-driven component in this module. Its instructions live in a
 #: version-controlled Markdown definition rather than in this file — see
-#: ``src/ttr/agentdefs/definitions/report-narrative.md`` and
-#: ``docs/agent-architecture.md``. Everything else here (counts, effort, downtime,
-#: absence classification, charts, the honesty statements, the whole BNG-aligned
-#: report) is deterministic and reaches no model, so none of it has a definition.
+#: ``src/ttr/agentdefs/definitions/report-narrative.md``. Everything else here
+#: (counts, effort, downtime, absence classification, charts, the honesty statements,
+#: the whole BNG-aligned report) is deterministic and reaches no model, so none of it
+#: has a definition.
 #:
 #: Four fragments, matching how the prompt has always been assembled:
 #:   ``instructions``      the base system prompt
@@ -710,8 +709,7 @@ class ReportGeneratorAgent:
         classification collapses to two (a silence in the all-species stream IS a
         system-wide silence by definition, so 'absent while system confirmed up'
         cannot arise). The single-species report entry (`generate`) is genuinely
-        species-shaped, so this is a sibling method rather than a flag — see
-        Adjustments/all_species_needed_a_sibling_entry.md."""
+        species-shaped, so this is a sibling method rather than a flag."""
         records = self._retrieval.find_all(window)
         dated = len(records)
         undated = self._retrieval.count_undated_all()

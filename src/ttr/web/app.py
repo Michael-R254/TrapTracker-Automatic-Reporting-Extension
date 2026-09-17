@@ -2,7 +2,7 @@
 
 `/api/report` renders the report generator's markdown to HTML and **sanitises it
 server-side** before returning it, because the report embeds VLM descriptions —
-untrusted, measured-confabulatory model output (CLAUDE.md §6). The same "VLM
+untrusted, measured-confabulatory model output. The same "VLM
 content is data, never instructions" principle applies at the render boundary.
 
 The frontend holds no report logic: it submits (species, start, end), and injects
@@ -102,22 +102,20 @@ ALL_SPECIES = "*all*"
 BNG_ALIGNED = "*bng*"
 
 # TWO POLICIES, and the split is the whole security model.
-# Full design record: docs/render-safety.md.
 #
 # HISTORY, because the comment that stood here was WRONG and a reader should know
 # that this one is checked rather than asserted. It claimed an SVG-shaped VLM
 # string "is stripped of every attribute below and rendered inert". That was false
 # for the very path it described - fill and width survived on <rect> - and it was
 # disproved by the project's own negative testing on 2026-08-14, then carried as a
-# strict xfail for three weeks (Results/coverage_map.md §7.3). The claims below are
+# strict xfail for three weeks. The claims below are
 # each pinned by a test, named where it matters.
 #
 # The DOCUMENT policy guards everything that reaches the page through the report
 # markdown - which includes model-authored text: the narrative LLM's prose and the
-# VLM's image descriptions, the latter email-derived and untrusted under CLAUDE.md
-# §6. It permits NO SVG at all. Chart-shaped markup from either model is therefore
-# not sanitised into harmlessness, it is simply not renderable: there is no tag for
-# it to become.
+# VLM's image descriptions, the latter email-derived and untrusted. It permits NO SVG
+# at all. Chart-shaped markup from either model is therefore not sanitised into
+# harmlessness, it is simply not renderable: there is no tag for it to become.
 #
 # The CHART policy guards the agent's own computed charts, which do not travel in
 # the document. They are held aside during rendering and injected after the
@@ -164,7 +162,6 @@ _SVG_ATTRS = {
 #: an invariant enforced by `test_chart_policy_is_privileged.py`, not by memory.
 #: That guard asserts these names are read in exactly one function, reached only
 #: through `substitute_into(normalise=...)`, and never imported out of this module.
-#: See docs/render-safety.md §1 for why that is the thing worth guarding.
 _CHART_TAGS = _ALLOWED_TAGS | _SVG_TAGS
 _CHART_ATTRS = {**_ALLOWED_ATTRS, **_SVG_ATTRS}
 
@@ -251,8 +248,8 @@ class CreateProjectRequest(BaseModel):
 
     A BODY model, never query parameters, and that is a security property rather
     than a style choice: uvicorn's access log records the full request line
-    including the query string and does NOT record bodies — audited by probe, see
-    `docs/multi-project-phase1b-gap-closure.md` §6. A password in a query string
+    including the query string and does NOT record bodies — audited by probe.
+    A password in a query string
     would be written to the log in clear.
     """
 
