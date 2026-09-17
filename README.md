@@ -28,6 +28,7 @@ no upstream system and no model weights.
 - [Results](#results)
 - [Dataset](#dataset)
 - [Pipeline](#pipeline)
+- [Web interface](#web-interface)
 - [Repository structure](#repository-structure)
 - [Setup and requirements](#setup-and-requirements)
 - [How to run](#how-to-run)
@@ -252,6 +253,53 @@ alert mailbox (Gmail, IMAP)
 Every report states three things unconditionally: counts are alert events, not
 animals; how each event was dated; and which parts of the email format were
 validated against a real captured alert.
+
+---
+
+## Web interface
+
+`ttr serve` starts a local web UI (see [How to run](#how-to-run)). Every screenshot
+below shows the worked example project, built from the published extract; the
+reports page is the one at the top of this README.
+
+### Projects
+
+Each project has its own database, image store, mailbox and species table. Its card
+shows the alert-event count and a daily chart, the dated range, whether a mailbox
+credential is stored, and the site on a map.
+
+![The projects page: one card for Example Site with 475 alert events over 19 days, a daily bar chart, the mailbox credential status and a site map, beside a panel for creating a project](docs/screenshots/1-ProjectPage1.png)
+
+Below the cards, the page sets out which project actions the browser can do and
+which stay in the terminal. Creating a project works in both, but the terminal is
+safer for the app password: `getpass` is out of reach of browser autofill and
+history.
+
+![The "Browser or terminal?" panel: a table of project actions marking which can be done in the browser and which only in the terminal, beside the matching ttr project commands](docs/screenshots/2-ProjectPage2.png)
+
+### Creating a project
+
+The form takes the site (name, site name, optional coordinates for weather), the
+Gmail alert inbox and its app password. The password is verified against the
+mailbox before anything is written, then stored in the operating system's
+credential store.
+
+<img src="docs/screenshots/3-CreateProject.png" width="320" alt="The Create a project form, with Site, Mailbox and Species steps and a warning that a password typed into a browser is within reach of autofill and history">
+
+### Choosing a report
+
+A report covers all species, one species, or the BNG-aligned habitat-condition
+format. Species are listed with their alert-event counts in the chosen window.
+
+<img src="docs/screenshots/5-ReportTypes.png" width="370" alt="The report menu: All species, BNG-aligned monitoring report, and the four species in the dataset with their counts">
+
+### Ingesting alerts
+
+The ingest page polls the project's mailbox, runs BioCLIP and the vision model on
+each image, and stores one row per image. It names the files it writes to, and
+stays disabled until a mailbox credential exists.
+
+![The Ingest new alerts page: Fetch now and Poll continuously buttons, where the run reads and writes, 475 rows stored, and a notice that fetching is disabled until a mailbox credential is set](docs/screenshots/6-IngestAlerts.png)
 
 ---
 
