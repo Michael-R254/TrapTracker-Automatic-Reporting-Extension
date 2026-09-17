@@ -541,9 +541,9 @@ third-party material.
 
 ## Acknowledgements
 
-- **Dr Paul Fergus**, for supervising this project and for leading Trap Tracker.
+- **Dr Paul Fergus**, for supervising this project, for leading Trap Tracker, and for
+  the camera deployment and the alert stream this project was built and evaluated
+  against.
 - The **Conservation AI Research Group** and the **School of Computer Science and
   Mathematics, Liverpool John Moores University**, for the detection system this work
   extends.
-- The deployment supervisor, for the camera deployment and the alert stream this
-  project was built and evaluated against.
