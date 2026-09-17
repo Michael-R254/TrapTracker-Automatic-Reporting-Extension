@@ -217,6 +217,78 @@ def test_serve_mints_a_fresh_token_when_none_is_fixed(serve_without_a_server, mo
     assert f"?token={token}" in result.output + (result.stderr or "")
 
 
+# --------------------------------------------------------------------------- #
+# The address the server listens on is not the address a browser opens.
+#
+# Docker binds 0.0.0.0, and `http://0.0.0.0:8000` is ERR_ADDRESS_INVALID in a
+# Windows browser. The bind must stay; the printed URL must not use it.
+# --------------------------------------------------------------------------- #
+def test_browser_host_maps_wildcard_binds_to_localhost():
+    from ttr.cli import browser_host
+
+    for bind in ("0.0.0.0", "::", "[::]", "", None, " 0.0.0.0 "):
+        assert browser_host(bind) == "localhost", bind
+    assert browser_host("127.0.0.1") == "127.0.0.1"
+    assert browser_host("192.168.1.20") == "192.168.1.20"
+    assert browser_host("::1") == "[::1]"
+
+
+@pytest.fixture
+def serve_capturing_the_bind(monkeypatch):
+    """`serve` up to uvicorn; yields (host, port, token) uvicorn was given."""
+    uvicorn = pytest.importorskip("uvicorn")
+    from ttr.web import auth
+
+    calls = []
+    monkeypatch.setattr(uvicorn, "run", lambda app, **k: calls.append(
+        (k["host"], k["port"], auth.get_ui_token())))
+    monkeypatch.delenv("TTR_UI_TOKEN", raising=False)
+    yield calls
+    auth.set_ui_token(None)
+
+
+def test_a_docker_style_serve_binds_0000_but_prints_localhost(serve_capturing_the_bind):
+    result = runner.invoke(app, ["serve", "--host", "0.0.0.0", "--port", "8123",
+                                 "--i-understand-no-auth"])
+
+    assert result.exit_code == 0, result.output
+    [(host, port, token)] = serve_capturing_the_bind
+    assert (host, port) == ("0.0.0.0", 8123), "the bind address must not change"
+
+    output = result.output + (result.stderr or "")
+    assert "TrapTracker Automatic Reporting Extension is running." in output
+    assert f"Open in your browser:\nhttp://localhost:8123/?token={token}\n" in output
+    assert "http://0.0.0.0" not in output
+
+
+def test_a_loopback_serve_prints_its_own_address(serve_capturing_the_bind):
+    result = runner.invoke(app, ["serve", "--port", "8124"])
+
+    assert result.exit_code == 0, result.output
+    [(host, port, token)] = serve_capturing_the_bind
+    assert host == "127.0.0.1"
+    assert f"http://127.0.0.1:8124/?token={token}" in result.output + (result.stderr or "")
+
+
+def test_uvicorns_startup_line_names_a_browser_address():
+    import logging
+
+    from ttr.cli import BrowserHostLogFilter
+
+    def started(host):
+        record = logging.LogRecord(
+            "uvicorn.error", logging.INFO, __file__, 0,
+            "Uvicorn running on %s://%s:%d (Press CTRL+C to quit)",
+            ("http", host, 8000), None)
+        assert BrowserHostLogFilter().filter(record) is True
+        return record.getMessage()
+
+    assert started("0.0.0.0") == \
+        "Uvicorn running on http://localhost:8000 (Press CTRL+C to quit)"
+    assert started("127.0.0.1") == \
+        "Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)"
+
+
 def test_serve_refuses_a_weak_fixed_token(serve_without_a_server, monkeypatch):
     monkeypatch.setenv("TTR_UI_TOKEN", "hunter2")
 

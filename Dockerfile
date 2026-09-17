@@ -73,8 +73,10 @@ USER ttr
 EXPOSE 8000
 
 ENTRYPOINT ["ttr"]
-# 0.0.0.0 is the container's own interface, which is the only way a published
-# port reaches it; `--i-understand-no-auth` is what `serve` requires for that.
-# Exposure on the HOST is decided by the port mapping — compose.yaml publishes
-# on 127.0.0.1 only, which keeps the loopback-only intent.
+# 0.0.0.0 is the bind address: listening on every interface in the container is
+# the only way a published port reaches it; `--i-understand-no-auth` is what
+# `serve` requires for that. The URL `serve` prints uses localhost instead, since a
+# browser cannot open 0.0.0.0. Exposure on the HOST is decided by the port
+# mapping — compose.yaml publishes on 127.0.0.1 only, which keeps the
+# loopback-only intent.
 CMD ["serve", "--host", "0.0.0.0", "--port", "8000", "--i-understand-no-auth"]

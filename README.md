@@ -182,36 +182,48 @@ export and the published example data. You need
 [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine
 with the Compose plugin) and Git. Run every command from the repository root.
 
+The Compose file is [`docker/compose.yaml`](docker/compose.yaml), so every `docker
+compose` command below passes `-f docker/compose.yaml`. It is kept out of the
+repository root on purpose: from there, Compose would read the app's own `.env`.
+
 ### 1. Build and start
 
 ```bash
 git clone https://github.com/Michael-R254/TrapTracker-Automatic-Reporting-Extension.git
 cd TrapTracker-Automatic-Reporting-Extension
 
-docker compose -f docker/compose.yaml build
-docker compose -f docker/compose.yaml up -d
+docker compose -f docker/compose.yaml up -d --build
 ```
 
-This builds the web UI only. For the species cross-check and cropping models (PyTorch,
-several GB), build with the extras instead, then start it again:
+`--build` builds the image before starting it; later starts can leave it out. This
+builds the web UI only. For the species cross-check and cropping models (PyTorch,
+several GB), build with the extras instead:
 
 ```bash
-TTR_EXTRAS=web,enrich,detect docker compose -f docker/compose.yaml build
-# Windows PowerShell:  $env:TTR_EXTRAS = "web,enrich,detect"; docker compose -f docker/compose.yaml build
-docker compose -f docker/compose.yaml up -d
+TTR_EXTRAS=web,enrich,detect docker compose -f docker/compose.yaml up -d --build
+# Windows PowerShell:  $env:TTR_EXTRAS = "web,enrich,detect"; docker compose -f docker/compose.yaml up -d --build
 ```
 
 ### 2. Open the web UI
 
-The UI is protected by a session token, printed when the server starts:
+The UI is protected by a session token. The server prints the address to open, token
+included, when it starts:
 
 ```bash
-docker compose -f docker/compose.yaml logs ttr | grep "token="
-# Windows PowerShell:  docker compose -f docker/compose.yaml logs ttr | Select-String "token="
+docker compose -f docker/compose.yaml logs -f ttr
 ```
 
-Open the printed URL with `0.0.0.0` replaced by `127.0.0.1`, for example
-`http://127.0.0.1:8000/?token=...`. The UI is only reachable from your own machine.
+```text
+ttr-1  | TrapTracker Automatic Reporting Extension is running.
+ttr-1  |
+ttr-1  | Open in your browser:
+ttr-1  | http://localhost:8000/?token=3q2-7wQ...
+```
+
+Open that link. Press Ctrl-C to stop following the log; the container keeps running.
+Inside the container the server listens on `0.0.0.0`, which Docker needs in order to
+forward the port, but the port is published on your machine's loopback only, so the
+UI is reachable at `localhost` from your own machine and from nowhere else.
 
 A new token is created every time the container starts. To keep one bookmarkable URL,
 set your own token (at least 32 letters, digits, `-` or `_`) before starting:
@@ -222,8 +234,17 @@ export TTR_UI_TOKEN="$(python -c "import secrets; print(secrets.token_urlsafe(32
 docker compose -f docker/compose.yaml up -d
 ```
 
-Then open `http://127.0.0.1:8000/?token=<your token>`. Set the same value in each new
-terminal before running `up` again.
+The log then shows `http://localhost:8000/?token=<TTR_UI_TOKEN>` rather than the token
+itself; open it with your value in place. Set the same value in each new terminal
+before running `up` again.
+
+To use a port other than 8000, set `TTR_PORT` before starting. The printed address
+follows it:
+
+```bash
+TTR_PORT=8080 docker compose -f docker/compose.yaml up -d
+# Windows PowerShell:  $env:TTR_PORT = "8080"; docker compose -f docker/compose.yaml up -d
+```
 
 ### 3. Explore the example project
 
@@ -281,10 +302,12 @@ On Windows PowerShell, set the variables with `$env:TTR_PROJECT = "..."` and
 after three attempts rather than retrying against Gmail;
 `docker compose -f docker/compose.yaml logs ingest` shows why.
 
-### Stopping
+### Checking and stopping
 
 ```bash
-docker compose -f docker/compose.yaml down
+docker compose -f docker/compose.yaml ps          # is it running, and on which port
+docker compose -f docker/compose.yaml logs ttr    # the startup output again, including the address
+docker compose -f docker/compose.yaml down        # stop and remove the containers
 ```
 
 Projects are kept in a Docker volume (`traptracker-report_ttr-data`) and are still

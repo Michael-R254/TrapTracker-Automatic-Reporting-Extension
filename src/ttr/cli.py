@@ -772,6 +772,45 @@ def is_loopback(host: str) -> bool:
     return (host or "").strip().lower() in _LOOPBACK_HOSTS
 
 
+#: Bind addresses meaning "every interface". A server can listen on one - Docker
+#: needs it, since a published port reaches the container's own interface, not its
+#: loopback - but a browser cannot open one: `http://0.0.0.0:8000` is
+#: ERR_ADDRESS_INVALID in Chrome and Edge on Windows.
+_WILDCARD_HOSTS = frozenset({"", "0.0.0.0", "::", "[::]"})
+
+
+def browser_host(bind_host: str) -> str:
+    """The host to put in a URL a person opens, for a server bound to ``bind_host``.
+
+    A wildcard bind is reachable on this machine as ``localhost``. Under Docker
+    that is the host's loopback, where `docker/compose.yaml` publishes the port.
+    Any other address is returned as given, bracketed if it is an IPv6 literal.
+    """
+    host = (bind_host or "").strip()
+    if host.lower() in _WILDCARD_HOSTS:
+        return "localhost"
+    if ":" in host and not host.startswith("["):
+        return f"[{host}]"
+    return host
+
+
+class BrowserHostLogFilter:
+    """Rewrites uvicorn's "Uvicorn running on http://0.0.0.0:8000" line.
+
+    Only the host changes, and only for a wildcard bind, so the log names an
+    address a browser can open rather than contradicting the URL `serve` printed.
+    """
+
+    def filter(self, record) -> bool:          # noqa: A003 - logging's own name
+        if (isinstance(record.msg, str) and record.msg.startswith("Uvicorn running on")
+                and isinstance(record.args, tuple) and len(record.args) == 3
+                and isinstance(record.args[1], str)
+                and record.args[1].strip().lower() in _WILDCARD_HOSTS):
+            protocol, _, port = record.args
+            record.args = (protocol, browser_host(record.args[1]), port)
+        return True
+
+
 @app.command()
 def serve(
     host: str = typer.Option("127.0.0.1", help="Bind host (local only by default)."),
@@ -847,6 +886,7 @@ def serve(
     # write it to the log in clear, outliving the session it belongs to.
     for name in ("uvicorn.access", "uvicorn.error"):
         logging.getLogger(name).addFilter(RedactTokenFilter())
+    logging.getLogger("uvicorn.error").addFilter(BrowserHostLogFilter())
 
     # A fresh install opens on the worked example rather than an empty page.
     ensure_example_project(notify=lambda message: typer.echo(message, err=True))
@@ -856,20 +896,30 @@ def serve(
             f"WARNING: bound to {host} over plain HTTP - the session token is not "
             f"encrypted in transit, and anyone who obtains it can trigger ingestion "
             f"and read your reports.", err=True)
+
+    # `host` is where the server LISTENS; the printed URL is where a browser GOES.
+    # They differ under Docker, which binds 0.0.0.0. The port is the same on both
+    # sides: `docker/compose.yaml` publishes host port == container port.
+    base_url = f"http://{browser_host(host)}:{port}/"
+    typer.echo("", err=True)
+    typer.echo("TrapTracker Automatic Reporting Extension is running.", err=True)
+    typer.echo("", err=True)
+    typer.echo("Open in your browser:", err=True)
     if fixed:
         # Not printed: the holder already has it, and a fixed token written to a
         # log (`docker compose logs` keeps them) would outlive every restart.
-        typer.echo(f"serving demo UI at http://{host}:{port}/?token=<{UI_TOKEN_ENV}>",
-                   err=True)
-        typer.echo(f"  open that URL with the value of {UI_TOKEN_ENV} in place of\n"
-                   f"  <{UI_TOKEN_ENV}>. It stays the same across restarts.\n"
-                   "  (Ctrl-C to stop)", err=True)
+        typer.echo(f"{base_url}?token=<{UI_TOKEN_ENV}>", err=True)
+        typer.echo("", err=True)
+        typer.echo(f"Put the value of {UI_TOKEN_ENV} in place of <{UI_TOKEN_ENV}>. "
+                   f"It stays the same across restarts.", err=True)
     else:
-        typer.echo(f"serving demo UI at http://{host}:{port}/?token={token}", err=True)
-        typer.echo("  open that URL - the token is exchanged for a session cookie and\n"
-                   "  removed from the address bar. A new one is minted each start.\n"
-                   f"  (Set {UI_TOKEN_ENV} to keep one across restarts. Ctrl-C to stop)",
+        typer.echo(f"{base_url}?token={token}", err=True)
+        typer.echo("", err=True)
+        typer.echo("The token is exchanged for a session cookie and removed from the "
+                   "address bar.\n"
+                   f"A new one is minted each start; set {UI_TOKEN_ENV} to keep one.",
                    err=True)
+    typer.echo("", err=True)
     uvicorn.run(web_app, host=host, port=port)
 
 

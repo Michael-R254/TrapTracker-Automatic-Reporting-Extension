@@ -90,6 +90,9 @@ services:
       # port must be the SAME number — the PDF route has the in-container
       # browser dial 127.0.0.1 on the port the request arrived at.
       - "127.0.0.1:${TTR_PORT:-8000}:${TTR_PORT:-8000}"
+    # 0.0.0.0 is the BIND address, which a published port needs. It is not an
+    # address to browse to: `serve` prints http://localhost:<TTR_PORT>/?token=...,
+    # which is right because the host port above is the same number.
     command: ["serve", "--host", "0.0.0.0", "--port", "${TTR_PORT:-8000}", "--i-understand-no-auth"]
 
   # The live poll -> enrich -> store loop. Opt-in:
