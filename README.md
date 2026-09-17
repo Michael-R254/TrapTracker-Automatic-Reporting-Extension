@@ -417,7 +417,7 @@ lawn. Cropping first changed that (full corpus, n = 787):
 invented details, such as on-screen dates and text, and occasionally animals, so
 reports present them as unverified and nothing is counted from them.
 
-**Tests.** 1044 passed and 8 skipped on a fresh clone (2026-09-17, Python 3.12); the
+**Tests.** 1054 passed and 8 skipped on a fresh clone (2026-09-17, Python 3.12); the
 skipped tests need local data that is not published.
 
 Full write-ups:
