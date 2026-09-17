@@ -1,0 +1,128 @@
+# Species alias table (Decision 5) — ILLUSTRATIVE EXAMPLE.
+#
+# This is the fallback table shipped with the package so the demo commands work
+# out of the box. It is NOT a deployment class list, and it is deliberately NOT
+# a copy of one: it is a short, independently-chosen set of common UK
+# camera-trap subjects, assembled to demonstrate the FORMAT and to exercise every
+# structural case the code depends on.
+#
+# Redistribution note: the alias table used for this project's own evaluation was
+# built from a class list supplied by the TrapTracker RT deployment, whose
+# redistribution terms are not yet confirmed (see LICENSING_REVIEW.md). That
+# table therefore stays local and untracked, at the path SPECIES_ALIAS_PATH
+# points to (config/species_aliases.yaml by default). Point that setting at your
+# own model's classes; this file is only the fallback when it is absent.
+#
+# STRUCTURE per entry:
+#   <canonical key>:                 # scientific binomial, OR reserved 'nonbio:<Token>'
+#     raw_tokens: [<exact class tokens your model emits>]  # list — several may
+#                                                          #   map to one key
+#     common_names: [<display / query aliases, case-insensitive>]
+#     bioclip_comparable: true|false # default true; false => agreement is always
+#                                    #   'not_evaluable (outside BioCLIP taxonomy)'
+#
+# The canonical key is the scientific binomial. Classes with no binomial use a
+# reserved 'nonbio:<Token>' key so they stay queryable (never NULL) and are
+# flagged non-binomial, so no report ever asserts species-hood for them.
+#
+# Cases this example deliberately covers, because the code has a branch for each:
+#   - many-to-one tokens: life-stage variants collapsing to one binomial
+#     (CygnusOlor / CygnusOlorCygnet -> Cygnus olor);
+#   - ambiguous common names: a bare "deer" and a bare "pipistrelle" each resolve to
+#     more than one species, so resolve() raises AmbiguousSpecies with candidates
+#     rather than silently picking one;
+#   - reserved non-binomial keys with bioclip_comparable: false — these are
+#     outside BioCLIP's Tree of Life, so comparing them would yield a permanent
+#     false 'disagree' (Decision 2);
+#   - a domestic animal that IS still cross-checked, to show that
+#     bioclip_comparable is about taxonomic coverage, not about wildness.
+
+# --------------------------------------------------------------------------- #
+# Entries whose tokens are also emitted by the deployment this project was built
+# against. They are here because the bundled test fixtures use them, not to
+# reproduce that deployment's class list: 8 of its 31 classes appear, every one
+# of them load-bearing for a fixture or a reserved-key branch.
+# --------------------------------------------------------------------------- #
+Vulpes vulpes:
+  raw_tokens: [VulpesVulpes]
+  common_names: [red fox, fox]
+
+Meles meles:
+  raw_tokens: [MelesMeles]
+  common_names: [european badger, badger]
+
+Erinaceus europaeus:
+  raw_tokens: [ErinaceusEuropaeus]
+  common_names: [european hedgehog, hedgehog]
+
+Columba palumbus:
+  raw_tokens: [ColumbaPalumbus]
+  common_names: [wood pigeon, woodpigeon]
+
+# "deer" is ambiguous across this and Cervus nippon below, on purpose.
+Capreolus capreolus:
+  raw_tokens: [CapreolusCapreolus]
+  common_names: [roe deer, deer]
+
+# --------------------------------------------------------------------------- #
+# Entries chosen purely to illustrate the format and exercise the remaining
+# branches. None of these is a class of that deployment.
+# --------------------------------------------------------------------------- #
+Cervus nippon:
+  raw_tokens: [CervusNippon]
+  common_names: [sika deer, deer]
+
+Lutra lutra:
+  raw_tokens: [LutraLutra]
+  common_names: [eurasian otter, otter]
+
+Lepus europaeus:
+  raw_tokens: [LepusEuropaeus]
+  common_names: [brown hare, hare]
+
+Pica pica:
+  raw_tokens: [PicaPica]
+  common_names: [eurasian magpie, magpie]
+
+# "pipistrelle" is ambiguous across these two, giving a second, independent
+# did-you-mean case that does not depend on the deer entries.
+Pipistrellus pipistrellus:
+  raw_tokens: [PipistrellusPipistrellus]
+  common_names: [common pipistrelle, pipistrelle]
+
+Pipistrellus pygmaeus:
+  raw_tokens: [PipistrellusPygmaeus]
+  common_names: [soprano pipistrelle, pipistrelle]
+
+# Many-to-one: a life-stage variant is the same species, so the reverse lookup
+# returns a LIST rather than a scalar.
+Cygnus olor:
+  raw_tokens: [CygnusOlor, CygnusOlorCygnet]
+  common_names: [mute swan, swan]
+
+# Domestic, but well inside BioCLIP's taxonomy — so still cross-checked.
+# bioclip_comparable is about taxonomic coverage, not about wildness.
+Gallus gallus:
+  raw_tokens: [GallusGallus]
+  common_names: [chicken]
+
+# --------------------------------------------------------------------------- #
+# Reserved non-binomial keys. No scientific binomial exists for these, so they
+# take a 'nonbio:' key: queryable, never NULL, never claimed to be a species.
+# bioclip_comparable is false ONLY here — they are outside BioCLIP's Tree of
+# Life, so any comparison would be a permanent false 'disagree' (Decision 2).
+# --------------------------------------------------------------------------- #
+nonbio:Person:
+  raw_tokens: [Person]
+  common_names: [person]
+  bioclip_comparable: false
+
+nonbio:Car:
+  raw_tokens: [Car]
+  common_names: [car]
+  bioclip_comparable: false
+
+nonbio:CalibrationPole:
+  raw_tokens: [CalibrationPole]
+  common_names: [calibration pole]
+  bioclip_comparable: false

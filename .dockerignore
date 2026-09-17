@@ -1,0 +1,16 @@
+# An ALLOWLIST, not a denylist. This checkout holds a .env, project databases,
+# camera imagery and dissertation material; a denylist is one forgotten line away
+# from copying any of them into an image layer, where deleting it later does not
+# remove it. Everything is excluded unless named below.
+*
+
+!pyproject.toml
+!README.md
+!LICENSE
+!src/
+!examples/
+!docs/evaluation/data/
+
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info

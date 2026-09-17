@@ -1,0 +1,30 @@
+From: garden-detections@example.com
+To: traptracker-alerts@example.com
+Subject: TrapTrackerRT Alert: CapreolusCapreolus (0.63) =?utf-8?b?4oCU?=
+ Garden Detections
+Date: Tue, 14 Jul 2026 02:13:47 +0000
+Message-ID: <missing-boxed-6012@garden.trapcam.alerts>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0573723662742672307=="
+
+--===============0573723662742672307==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Project: Garden Detections
+Rule: CapreolusCapreolus
+Best confidence: 0.63
+ImageId: 6012
+Time (UTC): 2026-07-13 21:04:33
+
+--===============0573723662742672307==
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="20260714_021301842_IMG_0091.jpg"
+MIME-Version: 1.0
+
+/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkI
+CQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/wAALCAABAAEBAREA/8QAFAABAAAAAAAA
+AAAAAAAAAAAAAP/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AfwD/2Q==
+
+--===============0573723662742672307==--

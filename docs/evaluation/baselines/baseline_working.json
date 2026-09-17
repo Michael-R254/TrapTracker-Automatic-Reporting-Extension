@@ -1,0 +1,369 @@
+{
+  "snapshot_version": 2,
+  "supersedes": "snapshot_version 1, which carried a single 'corpus_digest' covering only the full-frame cross-check verdicts plus two crop columns. That digest did NOT cover agreement_flag_crop, cross_check_status_crop, resolution_basis_crop, matched_rank_crop or taxonomic_distance_crop, so every verdict written by `recompute-crop-crosscheck` could change while the hash stayed identical. It also omitted matched_rank on the full-frame path. A v1 'corpus_digest' value is NOT comparable with either digest below.",
+  "captured_utc": "2026-09-04T12:56:00+00:00",
+  "purpose": "Stage 0 ground truth for the multi-project refactor (Phase 2 Stages 3-8). Stage 8 must reproduce verdict_digest.sha256 EXACTLY after migrating this database into a project folder and re-running recompute-crosscheck, recompute-crops and recompute-crop-crosscheck. Any difference is a refactor defect, not a finding.",
+  "source": {
+    "database": "working.db",
+    "source_path": "data/working.db",
+    "size_bytes": 12832768,
+    "mtime_utc": "2026-09-03T00:07:19+00:00",
+    "sha256_of_db_file": "9d264106d1981b07c750257a34e050720ba84635ed24bfb0e64782ba227a415b",
+    "wal_bytes_at_capture": 0
+  },
+  "shape": {
+    "row_count": 787,
+    "column_count": 52,
+    "columns": [
+      "id",
+      "source_type",
+      "source_message_id",
+      "ingested_at_utc",
+      "upstream_project",
+      "upstream_label",
+      "canonical_binomial",
+      "canonical_binomial_is_derived",
+      "canonical_is_binomial",
+      "display_common_name",
+      "upstream_confidence",
+      "upstream_confidence_note",
+      "upstream_image_id",
+      "upstream_image_id_resolvable",
+      "event_time_utc",
+      "event_time_is_capture_time",
+      "bioclip_ok",
+      "bioclip_model",
+      "bioclip_topk_json",
+      "bioclip_embedding_json",
+      "bioclip_error",
+      "agreement_flag",
+      "agreement_rationale",
+      "vlm_ok",
+      "vlm_model",
+      "vlm_description",
+      "vlm_error",
+      "original_image_path",
+      "boxed_image_path",
+      "images_present",
+      "provenance_json",
+      "parse_warnings_json",
+      "created_at_utc",
+      "capture_time_utc",
+      "capture_time_source",
+      "capture_time_tz_validated",
+      "capture_time_note",
+      "weather_category",
+      "weather_code_raw",
+      "temperature_c",
+      "precipitation_mm",
+      "weather_match_source",
+      "weather_used_send_fallback",
+      "bioclip_top1_kingdom",
+      "bioclip_top1_class",
+      "bioclip_top1_order",
+      "bioclip_top1_family",
+      "bioclip_top1_genus",
+      "cross_check_status",
+      "resolution_basis",
+      "matched_rank",
+      "taxonomic_distance"
+    ]
+  },
+  "column_classification": {
+    "note": "Every column of the 90-column schema is in exactly one class; this is asserted when the snapshot is generated, so a schema addition fails loudly rather than being silently left out of both digests.",
+    "analytical_verdict": {
+      "note": "A decision the pipeline made. A basis/status string counts as a verdict when it is the recorded REASON for a decision and is drawn from a closed vocabulary (crop_basis: 6 distinct values, resolution_basis: 3, tt_banner_basis: 10). It counts as provenance when it records where a value came from (weather_match_source: 137 distinct, capture_time_source).",
+      "full_frame_crosscheck": [
+        "agreement_flag",
+        "cross_check_status",
+        "resolution_basis",
+        "matched_rank",
+        "taxonomic_distance"
+      ],
+      "crop_crosscheck": [
+        "agreement_flag_crop",
+        "cross_check_status_crop",
+        "resolution_basis_crop",
+        "matched_rank_crop",
+        "taxonomic_distance_crop"
+      ],
+      "crop_decision": [
+        "crop_status",
+        "crop_basis",
+        "crop_box_json",
+        "localisation_iou",
+        "localisation_agreement",
+        "tt_box_recovered",
+        "tt_box_self_check",
+        "tt_box_clipped",
+        "tt_banner_basis",
+        "tt_label_mismatch"
+      ],
+      "out_of_scope_for_verdict_digest": [
+        "canonical_binomial",
+        "canonical_binomial_is_derived",
+        "canonical_is_binomial",
+        "display_common_name",
+        "capture_time_utc",
+        "capture_time_source",
+        "capture_time_tz_validated",
+        "event_time_is_capture_time",
+        "weather_category",
+        "weather_code_raw",
+        "temperature_c",
+        "precipitation_mm",
+        "weather_used_send_fallback",
+        "bioclip_ok",
+        "vlm_ok",
+        "bioclip_crop_ok"
+      ]
+    },
+    "evidence": {
+      "note": "Raw model or OCR output. Hashed into evidence_digest only.",
+      "json": [
+        "bioclip_topk_json",
+        "bioclip_crop_topk_json",
+        "bioclip_embedding_json",
+        "detector_box_json",
+        "tt_box_json"
+      ],
+      "scalar": [
+        "bioclip_top1_kingdom",
+        "bioclip_top1_class",
+        "bioclip_top1_order",
+        "bioclip_top1_family",
+        "bioclip_top1_genus",
+        "bioclip_crop_top1_kingdom",
+        "bioclip_crop_top1_class",
+        "bioclip_crop_top1_order",
+        "bioclip_crop_top1_family",
+        "bioclip_crop_top1_genus",
+        "detector_score",
+        "detector_candidate_count",
+        "tt_banner_ocr_label",
+        "tt_banner_ocr_confidence",
+        "tt_banner_ocr_score",
+        "frame_detection_count",
+        "vlm_description"
+      ]
+    },
+    "provenance_metadata": {
+      "note": "Describes HOW, not WHAT. Never hashed. `id`, `ingested_at_utc` and `created_at_utc` differ on any re-import, so hashing them would make the digest fail for reasons that carry no analytical meaning; `agreement_rationale` is prose that can be reworded without a verdict changing.",
+      "columns": [
+        "id",
+        "source_type",
+        "source_message_id",
+        "ingested_at_utc",
+        "created_at_utc",
+        "upstream_confidence_note",
+        "upstream_image_id_resolvable",
+        "original_image_path",
+        "boxed_image_path",
+        "images_present",
+        "provenance_json",
+        "parse_warnings_json",
+        "capture_time_note",
+        "weather_match_source",
+        "agreement_rationale",
+        "agreement_rationale_crop",
+        "bioclip_model",
+        "bioclip_error",
+        "vlm_model",
+        "vlm_error",
+        "bioclip_crop_model",
+        "bioclip_crop_error",
+        "detector_provider",
+        "detector_model",
+        "detector_error",
+        "crop_error",
+        "crop_pad_frac"
+      ]
+    },
+    "source_data": {
+      "note": "Parsed from the alert email; not decided by us.",
+      "columns": [
+        "upstream_project",
+        "upstream_label",
+        "upstream_confidence",
+        "upstream_image_id",
+        "event_time_utc"
+      ]
+    }
+  },
+  "distributions": {
+    "agreement_flag": {
+      "column_present": true,
+      "values": {
+        "disagree": 677,
+        "agree": 110
+      }
+    },
+    "cross_check_status": {
+      "column_present": true,
+      "values": {
+        "evaluable": 787
+      }
+    },
+    "resolution_basis": {
+      "column_present": true,
+      "values": {
+        "unresolved_prediction": 617,
+        "exact_species_match": 110,
+        "no_taxonomic_match": 60
+      }
+    },
+    "matched_rank": {
+      "column_present": true,
+      "values": {
+        "none": 677,
+        "species": 110
+      }
+    },
+    "taxonomic_distance": {
+      "column_present": true,
+      "values": {
+        "same_class": 225,
+        "non_animal": 205,
+        "same_species": 110,
+        "same_family": 106,
+        "other_animal": 72,
+        "same_genus": 65,
+        "same_order": 3,
+        "undetermined": 1
+      }
+    },
+    "agreement_flag_crop": {
+      "column_present": false
+    },
+    "cross_check_status_crop": {
+      "column_present": false
+    },
+    "resolution_basis_crop": {
+      "column_present": false
+    },
+    "matched_rank_crop": {
+      "column_present": false
+    },
+    "taxonomic_distance_crop": {
+      "column_present": false
+    },
+    "crop_status": {
+      "column_present": false
+    },
+    "crop_basis": {
+      "column_present": false
+    },
+    "localisation_agreement": {
+      "column_present": false
+    },
+    "tt_box_self_check": {
+      "column_present": false
+    },
+    "tt_banner_basis": {
+      "column_present": false
+    },
+    "tt_label_mismatch": {
+      "column_present": false
+    },
+    "tt_box_recovered": {
+      "column_present": false
+    },
+    "tt_box_clipped": {
+      "column_present": false
+    }
+  },
+  "numeric_summaries": {
+    "localisation_iou": {
+      "column_present": false
+    },
+    "detector_score": {
+      "column_present": false
+    },
+    "tt_banner_ocr_score": {
+      "column_present": false
+    }
+  },
+  "species_counts_by_canonical_binomial": {
+    "Columba palumbus": 759,
+    "Corvus corone": 11,
+    "Sciurus carolinensis": 11,
+    "Felis catus": 6
+  },
+  "verdict_digest": {
+    "sha256": "1f4e68b942cfcb4fc5890c77d4fca2c33d148687509bdadd4fc49e86841391bb",
+    "is_the_gate": true,
+    "columns": [
+      "source_message_id",
+      "agreement_flag",
+      "cross_check_status",
+      "resolution_basis",
+      "matched_rank",
+      "taxonomic_distance",
+      "agreement_flag_crop",
+      "cross_check_status_crop",
+      "resolution_basis_crop",
+      "matched_rank_crop",
+      "taxonomic_distance_crop",
+      "crop_status",
+      "crop_basis",
+      "crop_box_json",
+      "localisation_iou",
+      "localisation_agreement",
+      "tt_box_recovered",
+      "tt_box_self_check",
+      "tt_box_clipped",
+      "tt_banner_basis",
+      "tt_label_mismatch"
+    ],
+    "scope_note": "Covers both cross-check paths (full-frame and crop) and the crop decision. Species resolution, capture-time decoding and weather enrichment are also analytical, and are listed under column_classification.analytical_verdict.out_of_scope_for_verdict_digest rather than hashed here. They are excluded deliberately: none is re-run by recompute-crosscheck / recompute-crops / recompute-crop-crosscheck, and backfill-weather calls a live API whose response could differ for reasons unrelated to any refactor -- which would make the gate fail without a defect. Their distributions and per-species counts are recorded above as a separate check.",
+    "how_it_is_computed": [
+      "Absent columns are selected as SQL NULL, so a 52-column and a 90-column database produce comparably shaped rows and comparable digests.",
+      "Field encoding: NULL -> JSON null; a float column -> a string formatted '%.6f'; a *_json column -> canonicalised (see below); everything else -> its string value.",
+      "Rows are sorted ascending by source_message_id using Python's default str ordering (Unicode code point), NOT SQLite's collation.",
+      "Each row is serialised as a JSON array with json.dumps(row, ensure_ascii=False, separators=(',',':')).",
+      "SHA-256 over the concatenation of those lines, each followed by a single b'\\n'. Hex digest, lowercase."
+    ]
+  },
+  "evidence_digest": {
+    "sha256": "8e7c85553a7a3cb519be3580cb4e1d2b89f52c04548a0045f91a45659377e5fd",
+    "is_the_gate": false,
+    "columns": [
+      "source_message_id",
+      "bioclip_topk_json",
+      "bioclip_crop_topk_json",
+      "bioclip_embedding_json",
+      "detector_box_json",
+      "tt_box_json",
+      "bioclip_top1_kingdom",
+      "bioclip_top1_class",
+      "bioclip_top1_order",
+      "bioclip_top1_family",
+      "bioclip_top1_genus",
+      "bioclip_crop_top1_kingdom",
+      "bioclip_crop_top1_class",
+      "bioclip_crop_top1_order",
+      "bioclip_crop_top1_family",
+      "bioclip_crop_top1_genus",
+      "detector_score",
+      "detector_candidate_count",
+      "tt_banner_ocr_label",
+      "tt_banner_ocr_confidence",
+      "tt_banner_ocr_score",
+      "frame_detection_count",
+      "vlm_description"
+    ],
+    "scope_note": "Informational, NOT pass/fail. Re-running BioCLIP or the detector is not something the multi-project refactor should be doing at all, so a change here means something re-ran that should not have -- worth investigating, but it is not the migration's acceptance criterion. A stale-but-matching evidence digest alongside a changed verdict digest localises a defect to the decision logic rather than the model.",
+    "canonicalisation": "Each *_json value is decoded, every float in it rounded to 6 decimal places recursively, then re-encoded with sort_keys=True, ensure_ascii=False, separators=(',',':'). A value that does not parse as JSON is hashed as its raw string rather than dropped.",
+    "how_it_is_computed": [
+      "Absent columns are selected as SQL NULL, so a 52-column and a 90-column database produce comparably shaped rows and comparable digests.",
+      "Field encoding: NULL -> JSON null; a float column -> a string formatted '%.6f'; a *_json column -> canonicalised (see below); everything else -> its string value.",
+      "Rows are sorted ascending by source_message_id using Python's default str ordering (Unicode code point), NOT SQLite's collation.",
+      "Each row is serialised as a JSON array with json.dumps(row, ensure_ascii=False, separators=(',',':')).",
+      "SHA-256 over the concatenation of those lines, each followed by a single b'\\n'. Hex digest, lowercase."
+    ]
+  },
+  "shared_encoding_rationale": {
+    "why_floats_are_rounded": "Fixed 6dp formatting makes the digests reproducible across platforms and BLAS builds, where a last-bit difference carries no analytical meaning. A change large enough to matter at IoU or score scale is far above 1e-6, and the full-precision min/max/mean/quartiles in 'numeric_summaries' remain available as a second, finer check.",
+    "null_representation": "JSON null. Chosen over a sentinel string because no stored value can collide with it -- a literal '<NULL>' in the data could."
+  }
+}

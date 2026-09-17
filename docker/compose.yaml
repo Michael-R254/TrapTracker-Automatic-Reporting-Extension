@@ -1,0 +1,127 @@
+# TrapTracker Report — see the README's Docker section.
+#
+#   docker compose -f docker/compose.yaml up -d
+#
+# This file lives in docker/ ON PURPOSE. Compose reads a `.env` from the
+# directory holding the compose file, for interpolation AND for the
+# value-less passthrough entries below. At the repository root that would be the
+# app's own `.env`, whose values describe the HOST (OLLAMA_ENDPOINT=localhost is
+# wrong inside a container) — and a password written there would reach the
+# container, re-opening the file-based credential route the app refuses. From
+# here, only `docker/.env` is read, and it must never hold a password either.
+
+# Named, so the volumes are `traptracker-report_ttr-data` and `..._ttr-cache`
+# rather than `docker_*` after the directory this file sits in. The name is in
+# every `docker volume ls` line and in the copy-in instructions, so it should say
+# what it belongs to.
+name: traptracker-report
+
+# ONE definition both services share. The ingest loop and the web UI must agree
+# about the image, the volumes and the settings: drift there is how a `ttr run`
+# ends up reading a different database from the page that watches it.
+x-ttr: &ttr
+  build:
+    context: ..
+    dockerfile: Dockerfile
+    args:
+      EXTRAS: ${TTR_EXTRAS:-web}
+  image: traptracker-report:latest
+  init: true
+  volumes:
+    - ttr-data:/data
+    - ttr-cache:/cache
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  environment:
+    # MACHINE-level settings (.env.example), named WITHOUT values so that unset
+    # means "use the app's own default" (`config.py`). Repeating the defaults
+    # here would give them a second home to drift from, and
+    # `tests/test_docker_compose.py` asserts this list covers every field
+    # `Settings` declares — so a new setting cannot be added without a line here.
+    DETECTOR_MODEL:
+    DETECTOR_DEVICE:
+    DETECTOR_SCORE_THRESHOLD:
+    CROP_IOU_TAU:
+    CROP_PAD_FRAC:
+    BIOCLIP_MODEL:
+    BIOCLIP_DEVICE:
+    BIOCLIP_TOPK:
+    AGREEMENT_TOPK_JOIN:
+    # The one setting given a value here: inside a container `localhost` is the
+    # container, so the host's Ollama has to be named explicitly.
+    OLLAMA_ENDPOINT: ${OLLAMA_ENDPOINT:-http://host.docker.internal:11434}
+    OLLAMA_MODEL:
+    OLLAMA_TIMEOUT_SECONDS:
+    VLM_FALLBACK_TO_ORIGINAL_ON_MISSING_BOXED:
+    WEATHER_ENDPOINT:
+    WEATHER_TIMEOUT_SECONDS:
+    WEATHER_SMALL_SAMPLE_THRESHOLD:
+    BROWSER_EXECUTABLE:
+    REPORT_INCLUDE_CROSSCHECK:
+    CONFIDENCE_LOW_FLAG_THRESHOLD:
+    # Which project a command acts on. The ingest service below passes no
+    # --project, so this is how it is pointed at one. Naming a project this way
+    # also counts as SAYING which project, so an unscoped password is accepted
+    # for it (`Resolution.credential_scope`).
+    TTR_PROJECT:
+    # Mailbox passwords: named WITHOUT a value, so compose passes each through
+    # from the invoking shell when set and omits it when not. Add one
+    # `TTR_IMAP_PASSWORD__<ID>:` line per project; `ttr project
+    # test-connection` prints the exact name.
+    TTR_IMAP_PASSWORD:
+    # Pins the web UI's session token, so the bookmarked URL survives the restart
+    # every `up` brings. Passed through from the shell like a password, and for
+    # the same reason never given a value here or in docker/.env. Unset, a fresh
+    # token is minted each start and printed in `logs ttr`.
+    TTR_UI_TOKEN:
+
+services:
+  ttr:
+    <<: *ttr
+    # A readable name for the ingest page's "held by pid 7 on ttr", instead of a
+    # container id. Cosmetic: the lock itself is an OS file lock and never
+    # consults the hostname (projects/lock.py).
+    hostname: ttr
+    ports:
+      # Host loopback only: the UI is token-gated plain HTTP. Host and container
+      # port must be the SAME number — the PDF route has the in-container
+      # browser dial 127.0.0.1 on the port the request arrived at.
+      - "127.0.0.1:${TTR_PORT:-8000}:${TTR_PORT:-8000}"
+    command: ["serve", "--host", "0.0.0.0", "--port", "${TTR_PORT:-8000}", "--i-understand-no-auth"]
+
+  # The live poll -> enrich -> store loop. Opt-in:
+  #
+  #   TTR_PROJECT=<name-or-id> docker compose -f docker/compose.yaml \
+  #       --profile ingest up -d ingest
+  #
+  # Not part of a plain `up`, because it needs a mailbox credential in the
+  # environment: started without one it would do nothing but fail.
+  #
+  # It runs BESIDE the web UI safely. Both take the same on-disk ingest lock, so
+  # whichever starts second is refused rather than polling one mailbox twice
+  # (projects/lock.py), and the ingest page names the holder.
+  ingest:
+    <<: *ttr
+    profiles: ["ingest"]
+    hostname: ttr-ingest
+    command: ["run"]
+    # BOUNDED, not `unless-stopped`. A revoked or wrong app password fails on
+    # every attempt, and an unbounded restart loop would keep re-offering it to
+    # Gmail, which is how an account gets throttled. After three failures the
+    # container stays stopped and `docker compose logs ingest` says why.
+    restart: on-failure:3
+
+  # Optional: Ollama in a container, for a host without it.
+  #   docker compose -f docker/compose.yaml --profile ollama up -d
+  #   docker compose -f docker/compose.yaml exec ollama ollama pull llava
+  # and set OLLAMA_ENDPOINT=http://ollama:11434 in the shell before `up`.
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["ollama"]
+    volumes:
+      - ollama-models:/root/.ollama
+
+volumes:
+  ttr-data:
+  ttr-cache:
+  ollama-models:

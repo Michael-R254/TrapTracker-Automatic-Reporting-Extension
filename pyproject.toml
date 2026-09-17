@@ -1,0 +1,137 @@
+[build-system]
+# >=77 for PEP 639 (SPDX `license` string + `license-files`).
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "traptracker-report"
+version = "0.1.0"
+description = "Reporting & enrichment layer for TrapTracker RT alert emails (standalone, dissertation project)."
+readme = "README.md"
+requires-python = ">=3.11"
+# SPDX expression + license-files is the PEP 639 form (setuptools >= 77). It
+# supersedes the deprecated "License :: OSI Approved ::" classifier, so no
+# licence classifier is listed below.
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Michael Rollinson" }]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "typer>=0.12",
+    "imap-tools>=1.7",
+    "pyyaml>=6.0",
+    "httpx>=0.27",
+    # Mailbox app passwords go in the OS credential store (Windows Credential
+    # Manager / macOS Keychain / Secret Service), never in a file. This is a CORE
+    # dependency, not an extra, because the alternative to having it is storing
+    # the secret in plaintext -- which is precisely what the upstream system does
+    # (DETECTION_SYSTEM_ANALYSIS.md section 1) and what this project set out not
+    # to reproduce. An optional dependency would imply a fallback exists; there
+    # is none, by design.
+    "keyring>=24",
+    # zoneinfo ships in the stdlib but carries NO tz database on Windows, where it
+    # falls back to this package. Capture-time decoding converts Europe/London ->
+    # UTC with real DST rules, so the tz data is a hard requirement, not optional.
+    "tzdata>=2024.1; sys_platform == 'win32'",
+]
+
+# MUST stay below every `[project]` key above: a sub-table ends the parent table,
+# so anything placed after it would be parsed as a URL entry rather than as
+# project metadata.
+#
+# Only the upstream project's official site is listed. No public TrapTracker RT
+# source repository has been verified, so none is asserted here; this project's
+# own repository URL is omitted until it exists (there is no git remote yet).
+[project.urls]
+"Upstream project (Trap Tracker)" = "https://traptracker.co.uk/"
+"Upstream licence terms" = "https://traptracker.co.uk/licience-permitted-use/"
+
+# Heavy ML stack lives behind an extra so the core scaffold (Stages 0-2, 4-5)
+# installs cleanly even where torch/BioCLIP wheels are not yet published for the
+# interpreter in use (see IMPLEMENTATION_PLAN.md §7). Installed at Stage 3.
+[project.optional-dependencies]
+enrich = [
+    "pillow>=10.0",
+    "torch>=2.2",
+    "pybioclip>=1.0",
+    "open-clip-torch>=2.24",
+]
+# The independent detector for the crop path (Phase 2c). Apache-2.0 throughout:
+# RT-DETR's weights and transformers both. Separate from [enrich] so a checkout
+# that only wants the BioCLIP cross-check does not pull it, and vice versa.
+detect = [
+    "pillow>=10.0",
+    "torch>=2.2",
+    "transformers>=4.45",
+    # Declared, not inherited. `crop/banner_ocr.py` and `crop/overlay.py` import
+    # numpy directly; it had only ever arrived as a transitive dependency of
+    # torch, so an install that skipped torch got an ImportError from our own
+    # code rather than a clean "this extra is missing".
+    "numpy>=1.26",
+]
+web = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "markdown>=3.6",
+    "nh3>=0.2",          # HTML sanitiser for untrusted (VLM-derived) report text
+    # Small CDP client used ONLY to drive an already-installed Chrome/Edge for
+    # Page.printToPDF (controlled footer / Page X of Y). NOT a rendering framework —
+    # the report's own HTML/CSS is unchanged; the browser just prints it.
+    "websocket-client>=1.7",
+]
+dev = [
+    "pytest>=8.0",
+    # httpx (FastAPI TestClient) is already a core dependency.
+    # Reads generated PDFs back as text, so the PDF regression test can assert the
+    # report BODY is present rather than only that some bytes came back.
+    "pymupdf>=1.24",
+    # The suite exercises the web layer - seven test modules import `markdown` or
+    # `nh3` - so testing this project requires its web extra. Expressed as a
+    # self-reference rather than by repeating the names, so [web] can gain a
+    # dependency without [dev] silently falling behind it again.
+    #
+    # This is what the README means by "core + test tooling": `pip install -e
+    # ".[dev]"` then `pytest` must work on a fresh clone. Before this line it
+    # collected nothing - seven ModuleNotFoundError at import time.
+    "traptracker-report[web]",
+]
+
+[project.scripts]
+ttr = "ttr.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# RUNTIME data, not docs. Both are read through importlib.resources, so they must
+# travel with the installed package:
+#   agentdefs/definitions — the prompt-driven components' instructions; without
+#     them those components have nothing to send.
+#   species/data — the fallback alias table. Species resolution is not optional
+#     (a NULL canonical key loses the row from every query), so an install that
+#     cannot find this table cannot ingest.
+#   storage/schema.sql — the database schema every project is created from.
+#     Missing from this list until 2026-09-15: an editable install reads it
+#     from the source tree, so dev and CI never noticed, but a regular install
+#     (the Docker image) crashed on the first `import-extract` or `create`.
+[tool.setuptools.package-data]
+ttr = ["agentdefs/definitions/*.md", "species/data/*.yaml", "storage/schema.sql"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Model-weight tests are deselected by default so CI without weights passes;
+# run them explicitly with `pytest -m models`.
+addopts = "-m 'not models'"
+markers = [
+    "models: tests that require downloaded model weights (run with -m models)",
+    "browser: tests that drive a real headless Chrome/Edge (skip themselves if none)",
+    "live_imap: tests that require a live IMAP server (skipped by default)",
+]

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 402" width="520" height="402" role="img" aria-label="Timeline comparing two clocks over four days. Captures continue evenly through a delivery outage, but all alerts held during the outage are delivered under one later send timestamp. Counting by send time leaves one day showing zero events; counting by effective time, which prefers the recovered capture time, restores each event to the day it was captured.">
+
+  <rect x="0" y="0" width="520" height="402" fill="#FFFFFF"/>
+
+  <text x="16" y="20" font-family="Georgia, 'Times New Roman', serif" font-size="15" font-weight="bold" fill="#101A16">A delivery backlog mis-dates a whole day</text>
+  <text x="16" y="36" font-family="Georgia, 'Times New Roman', serif" font-size="10.5" fill="#46564E">Captures continue while delivery stops. Only the clock chosen for day bucketing decides whether that is visible.</text>
+
+  <!-- outage band -->
+  <rect x="173" y="68" width="257" height="132" fill="#F9F0DE"/>
+  <text x="176" y="80" font-family="Consolas, 'Courier New', monospace" font-size="9.5" fill="#91560A">delivery outage — capture continues, delivery stops</text>
+
+  <!-- day column separators -->
+  <line x1="138" y1="68" x2="138" y2="200" stroke="#C2CFC4" stroke-width="1"/>
+  <line x1="260" y1="68" x2="260" y2="200" stroke="#C2CFC4" stroke-width="1"/>
+  <line x1="382" y1="68" x2="382" y2="200" stroke="#C2CFC4" stroke-width="1"/>
+
+  <!-- day headers -->
+  <text x="77"  y="60" text-anchor="middle" font-family="Consolas, 'Courier New', monospace" font-size="10.5" fill="#46564E">day 1</text>
+  <text x="199" y="60" text-anchor="middle" font-family="Consolas, 'Courier New', monospace" font-size="10.5" fill="#46564E">day 2</text>
+  <text x="321" y="60" text-anchor="middle" font-family="Consolas, 'Courier New', monospace" font-size="10.5" fill="#46564E">day 3</text>
+  <text x="443" y="60" text-anchor="middle" font-family="Consolas, 'Courier New', monospace" font-size="10.5" fill="#46564E">day 4</text>
+  <text x="16" y="60" font-family="Consolas, 'Courier New', monospace" font-size="9.5" fill="#7E8C84">local dates, Europe/London</text>
+
+  <!-- ============ capture track ============ -->
+  <text x="16" y="94" font-family="Consolas, 'Courier New', monospace" font-size="10.5" fill="#1B5C51">capture_time_utc — decoded from filename block D</text>
+  <line x1="16" y1="112" x2="504" y2="112" stroke="#1B5C51" stroke-width="1.5"/>
+
+  <line x1="46"  y1="98" x2="46"  y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="77"  y1="98" x2="77"  y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="107" y1="98" x2="107" y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="168" y1="98" x2="168" y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="199" y1="98" x2="199" y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="229" y1="98" x2="229" y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="290" y1="98" x2="290" y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="321" y1="98" x2="321" y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="351" y1="98" x2="351" y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="412" y1="98" x2="412" y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="443" y1="98" x2="443" y2="112" stroke="#1B5C51" stroke-width="3"/>
+  <line x1="473" y1="98" x2="473" y2="112" stroke="#1B5C51" stroke-width="3"/>
+
+  <!-- ============ backlog connectors ============ -->
+  <line x1="199" y1="114" x2="443" y2="158" stroke="#91560A" stroke-width="1"/>
+  <line x1="229" y1="114" x2="444" y2="158" stroke="#91560A" stroke-width="1"/>
+  <line x1="290" y1="114" x2="445" y2="158" stroke="#91560A" stroke-width="1"/>
+  <line x1="321" y1="114" x2="446" y2="158" stroke="#91560A" stroke-width="1"/>
+  <line x1="351" y1="114" x2="447" y2="158" stroke="#91560A" stroke-width="1"/>
+  <line x1="412" y1="114" x2="448" y2="158" stroke="#91560A" stroke-width="1"/>
+  <text x="243" y="140" font-family="Consolas, 'Courier New', monospace" font-size="9.5" fill="#91560A">six captures held, then flushed under one send timestamp</text>
+
+  <!-- ============ delivery track ============ -->
+  <text x="16" y="152" font-family="Consolas, 'Courier New', monospace" font-size="10.5" fill="#3D5A80">event_time_utc — alert send time</text>
+  <line x1="16" y1="178" x2="504" y2="178" stroke="#3D5A80" stroke-width="1.5"/>
+
+  <line x1="46"  y1="164" x2="46"  y2="178" stroke="#3D5A80" stroke-width="3"/>
+  <line x1="78"  y1="164" x2="78"  y2="178" stroke="#3D5A80" stroke-width="3"/>
+  <line x1="108" y1="164" x2="108" y2="178" stroke="#3D5A80" stroke-width="3"/>
+  <line x1="169" y1="164" x2="169" y2="178" stroke="#3D5A80" stroke-width="3"/>
+
+  <line x1="433" y1="164" x2="433" y2="178" stroke="#3D5A80" stroke-width="3"/>
+  <line x1="439" y1="164" x2="439" y2="178" stroke="#3D5A80" stroke-width="3"/>
+  <line x1="445" y1="164" x2="445" y2="178" stroke="#3D5A80" stroke-width="3"/>
+  <line x1="451" y1="164" x2="451" y2="178" stroke="#3D5A80" stroke-width="3"/>
+  <line x1="457" y1="164" x2="457" y2="178" stroke="#3D5A80" stroke-width="3"/>
+  <line x1="463" y1="164" x2="463" y2="178" stroke="#3D5A80" stroke-width="3"/>
+  <line x1="469" y1="164" x2="469" y2="178" stroke="#3D5A80" stroke-width="3"/>
+  <line x1="475" y1="164" x2="475" y2="178" stroke="#3D5A80" stroke-width="3"/>
+
+  <text x="290" y="194" text-anchor="middle" font-family="Consolas, 'Courier New', monospace" font-size="10" fill="#91560A">nothing delivered on day 3</text>
+
+  <!-- ============ strip 1 — counted by send time ============ -->
+  <text x="16" y="224" font-family="Consolas, 'Courier New', monospace" font-size="10.5" fill="#46564E">counted by <tspan fill="#3D5A80">event_time_utc</tspan> (send time)</text>
+
+  <rect x="16"  y="232" width="118" height="42" fill="#F8FAF7" stroke="#C2CFC4" stroke-width="1"/>
+  <rect x="138" y="232" width="118" height="42" fill="#F8FAF7" stroke="#C2CFC4" stroke-width="1"/>
+  <rect x="260" y="232" width="118" height="42" fill="#F4E6CD" stroke="#91560A" stroke-width="1.5"/>
+  <rect x="382" y="232" width="118" height="42" fill="#F8FAF7" stroke="#C2CFC4" stroke-width="1"/>
+
+  <text x="75"  y="258" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#101A16">3</text>
+  <text x="197" y="258" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#101A16">1</text>
+  <text x="319" y="258" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-weight="bold" fill="#91560A">0</text>
+  <text x="441" y="258" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#101A16">8</text>
+  <text x="319" y="270" text-anchor="middle" font-family="Consolas, 'Courier New', monospace" font-size="9" fill="#91560A">phantom zero-day</text>
+  <text x="441" y="270" text-anchor="middle" font-family="Consolas, 'Courier New', monospace" font-size="9" fill="#7E8C84">absorbs three days</text>
+
+  <!-- ============ strip 2 — counted by effective time ============ -->
+  <text x="16" y="300" font-family="Consolas, 'Courier New', monospace" font-size="10.5" fill="#46564E">counted by <tspan fill="#1B5C51">COALESCE(capture_time_utc, event_time_utc)</tspan></text>
+
+  <rect x="16"  y="308" width="118" height="42" fill="#F8FAF7" stroke="#C2CFC4" stroke-width="1"/>
+  <rect x="138" y="308" width="118" height="42" fill="#F8FAF7" stroke="#C2CFC4" stroke-width="1"/>
+  <rect x="260" y="308" width="118" height="42" fill="#DCEBE5" stroke="#1B5C51" stroke-width="1.5"/>
+  <rect x="382" y="308" width="118" height="42" fill="#F8FAF7" stroke="#C2CFC4" stroke-width="1"/>
+
+  <text x="75"  y="334" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#101A16">3</text>
+  <text x="197" y="334" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#101A16">3</text>
+  <text x="319" y="334" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-weight="bold" fill="#1B5C51">3</text>
+  <text x="441" y="334" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#101A16">3</text>
+  <text x="319" y="346" text-anchor="middle" font-family="Consolas, 'Courier New', monospace" font-size="9" fill="#1B5C51">restored to its capture day</text>
+
+  <!-- ============ footnotes ============ -->
+  <line x1="16" y1="366" x2="504" y2="366" stroke="#C2CFC4" stroke-width="1"/>
+  <text x="16" y="382" font-family="Georgia, 'Times New Roman', serif" font-size="10" fill="#46564E">Both clocks are stored on every row; neither overwrites the other. The divergence between them is what evidences the outage.</text>
+  <text x="16" y="396" font-family="Georgia, 'Times New Roman', serif" font-size="10" fill="#46564E">Totals are equal either way — the backlog does not lose events, it re-files them onto the wrong day. Counts are illustrative.</text>
+
+</svg>

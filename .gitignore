@@ -1,0 +1,100 @@
+# Secrets & local config. `.env.*` catches the variants (`.env.local`,
+# `docker/.env.prod`) a bare `.env` rule lets through; the template is the one
+# that must stay tracked.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Our data + image store (never committed). Anchored to repo root so an
+# unrelated dir like docs/evaluation/data/ (committable extracts) is NOT ignored.
+/data/
+*.db
+*.db-wal
+*.db-shm
+/image_store/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+*.db-journal
+seen_message_ids.txt
+provenance_audit.json
+
+# Raw alert emails and camera frames, wherever they land. A saved .eml carries
+# live addresses and a frame shows the garden; both are the deployment's raw data.
+# The negations name what IS tracked, so `git ls-files -i -c` stays empty.
+*.eml
+*.jpg
+*.jpeg
+!tests/fixtures/emails/**/*.eml
+!tests/fixtures/images/*.jpg
+!docs/evidence/*.jpg
+
+# Model weights and caches: large, and re-downloaded on first use.
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+.cache/
+
+# The worked example builds into TTR_PROJECTS_ROOT, which the README points
+# at a dot-directory in the checkout. The example's SOURCE (the CSV, the
+# alias table, the README) is committed under examples/; what a run of it
+# produces is not.
+/.ttr-example/
+
+# Scratch input images. The deliberately-kept evaluation evidence lives in
+# docs/evidence/ (committed) and is NOT covered by this ignore.
+test_images/
+
+# Resolved (non-example) species alias table is user-owned local config
+config/species_aliases.yaml
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+.dmypy.json
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+.vscode/
+.idea/
+.vs/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Local dissertation drafts. They are kept beside the checkout while writing and
+# are not part of the tool.
+Writing Refinement/
+
+# Local tool state, including git worktrees checked out under .claude/worktrees/.
+# A worktree is a full second checkout of this repo; committing one would embed a
+# duplicate tree. The worktree itself is left in place, just never committed.
+.claude/

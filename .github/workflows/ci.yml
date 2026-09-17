@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main, public-release]
+  pull_request:
+  workflow_dispatch:
+
+# A second push to the same branch cancels the first: nothing here is worth
+# paying for twice.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: tests (py${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Install
+        run: pip install -e ".[web,dev]"
+
+      # `-m 'not models'` is the project's own default (pyproject `addopts`), so
+      # CI runs exactly what a developer runs. The suites that need something CI
+      # does not have skip themselves rather than failing:
+      #   * BioCLIP weights   -> marked `models`, deselected
+      #   * a live IMAP server-> marked `live_imap`, deselected
+      #   * headless Chrome   -> skips on BrowserNotFound (PDF, contrast layer 2)
+      - name: Test
+        run: pytest -q
+
+  guards:
+    # The release-safety checks, run as their own job so a failure names itself
+    # in the checks list rather than being one line inside a 900-test run. These
+    # are the tests that would let personal data reach a public repository.
+    name: release guards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: pip install -e ".[web,dev]"
+
+      - name: No real mailbox address, coordinate, site name or project id
+        run: pytest -q tests/test_no_real_addresses.py
+
+      - name: Palette contrast contract
+        # Layer 1 only by name; layer 2 (headless Chrome) self-skips here and is
+        # covered by the `test` job on a machine that may have a browser.
+        run: pytest -q tests/test_web_contrast.py
+
+      - name: The published extract still opens as a project
+        run: pytest -q tests/test_extract_loader.py
+
+      - name: No embedded raster in any published document
+        # PUBLIC BRANCH ONLY, and the condition is the point rather than a
+        # convenience. This scan exits non-zero when it finds a photograph,
+        # and `main` legitimately contains ten: the dissertation's figure
+        # documents, which belong there. Running it on `main` would fail
+        # every push by design — the surest way to teach everyone to ignore
+        # a red check. On the public tree a photograph is a release defect,
+        # which is exactly when this should shout.
+        #
+        # Gated on the REPOSITORY'S VISIBILITY, not the branch name. The public
+        # branch is pushed to the public remote as `main`, so a ref test for
+        # `public-release` never matched there and the scan never ran where it
+        # mattered. Visibility is the property that actually matters, and it
+        # also fires if the development tree is ever pushed somewhere public,
+        # which is exactly the mistake this scan should shout about.
+        if: ${{ !github.event.repository.private }}
+        run: |
+          pip install pillow
+          python docs/evaluation/embedded_image_scan.py
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: pip install ruff
+
+      # REAL ERRORS ONLY, and that is deliberate. Ruff's default rule set
+      # reports 709 findings on this tree — almost all style, none of them
+      # bugs. A job that fails from its first run teaches people to ignore
+      # it, and "fix 709 lint findings" is a refactor with regression risk,
+      # not release work. E9/F63/F7/F82 are syntax errors, undefined names
+      # and broken comparisons: things that are wrong rather than untidy.
+      # Widening this is a deliberate future decision, not an oversight.
+      - name: Ruff (errors, not style)
+        run: ruff check --select E9,F63,F7,F82 src tests

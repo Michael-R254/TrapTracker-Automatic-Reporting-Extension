@@ -1,0 +1,28 @@
+From: garden-detections@example.com
+To: traptracker-alerts@example.com
+Subject: TrapTrackerRT Alert: VulpesVulpes (0.91) =?utf-8?b?4oCU?= Garden
+ Detections
+Date: Tue, 14 Jul 2026 02:13:47 +0000
+Message-ID: <malformed-body-0001@garden.trapcam.alerts>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8352525794052168245=="
+
+--===============8352525794052168245==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Project: Garden Detections
+Rule: VulpesVulpes
+-- delivery notice: some lines were dropped --
+
+--===============8352525794052168245==
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="20260714_021301842_IMG_0091.jpg"
+MIME-Version: 1.0
+
+/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkI
+CQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/wAALCAABAAEBAREA/8QAFAABAAAAAAAA
+AAAAAAAAAAAAAP/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AfwD/2Q==
+
+--===============8352525794052168245==--

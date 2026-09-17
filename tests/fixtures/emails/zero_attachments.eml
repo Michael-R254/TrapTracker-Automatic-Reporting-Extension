@@ -1,0 +1,15 @@
+From: garden-detections@example.com
+To: traptracker-alerts@example.com
+Subject: TrapTrackerRT Alert: ErinaceusEuropaeus (0.55) =?utf-8?b?4oCU?=
+ Garden Detections
+Date: Tue, 14 Jul 2026 02:13:47 +0000
+Message-ID: <zero-attach-6789@garden.trapcam.alerts>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Project: Garden Detections
+Rule: ErinaceusEuropaeus
+Best confidence: 0.55
+ImageId: 6789
+Time (UTC): 2026-07-12 03:19:00
